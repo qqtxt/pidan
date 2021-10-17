@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset=UTF-8 />
+	<meta name="referrer" content="no-referrer">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+	<meta name="renderer" content="webkit">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0">
+	<meta name=keywords content="{$keywords}"/>
+	<meta name=Description content="{$description}"/>
+	<title>{$title}</title>
+	<link href="static/layui/css/layui.css" rel="stylesheet">	
+	<style>		
+	.site-block{padding: 20px; border: 1px solid #eee;}
+	.site-block{margin-top: 20px;}
+	</style>
+</head>
+<body>
+<div class="layui-container">  
+  <div class="layui-row">
+    <div class="layui-col-xs12">
+	
+	<div class="site-text site-block">
+      <form class="layui-form" method="post" action="index/index">
+        <div class="layui-form-item">
+          <label class="layui-form-label">姓名</label>
+          <div class="layui-input-block">
+            <input type="text" name="name" required="" lay-verify="required" placeholder="请输入姓名" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">手机</label>
+          <div class="layui-input-inline">
+            <input type="text" name="phone" required="" lay-verify="required|phone" lay-vertype="tips" placeholder="请输入手机" autocomplete="off" class="layui-input">
+          </div>
+          <div class="layui-form-mid layui-word-aux">手机</div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">商圈</label>
+          <div class="layui-input-block">
+            <select name="addr_mark" lay-verify="required">
+              <option value=""></option>
+              <option value="赛格">赛格</option>
+              <option value="华强电子世界">华强电子世界</option>
+           </select>
+          </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+          <label class="layui-form-label">备注</label>
+          <div class="layui-input-block">
+            <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+<script src="static/jquery/jquery.js"></script>
+<script src="static/layui/layui.js"></script>
+
+<script>
+layui.use('form', function(){
+	var form = layui.form;
+
+ 
+});
+</script>
+<include file="Public:footer"/>
+</body></html>

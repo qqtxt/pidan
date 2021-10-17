@@ -1,0 +1,20 @@
+{
+    "name": "jetee/pidan",
+    "description": "jetee下的皮蛋php框架",
+    "type": "library",
+    "license": "Mit",
+    "autoload": {
+        "psr-4": {
+            "app\\": "app"
+        }
+    },
+
+    "authors": [
+        {
+            "name": "zhh2100",
+            "email": "112738102@qq.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
