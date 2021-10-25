@@ -1,73 +1,37 @@
-SELECT phone FROM `je_personal_info` WHERE check_phone=?
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
 Array
 (
-    [0] => 1
-)
-
-SELECT phone FROM `je_personal_info` WHERE check_phone=:check_phone
-Array
-(
-    [:check_phone] => 1
+    [:phone_switch] => 0
 )
 
 SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
 Array
 (
-    [:phone_switch] => 1
+    [:phone_switch] => 0
 )
 
 SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
 Array
 (
-    [:phone_switch] => 1
+    [:phone_switch] => 0
 )
 
 SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
 Array
 (
-    [:phone_switch] => 1
+    [:phone_switch] => 0
 )
 
 SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
 Array
 (
-    [:phone_switch] => 1
-)
-
-insert `je_user` (phone)value(:phone)
-Array
-(
-    [:phone] => 18566125581
-)
-
-insert `je_user` (`phone`) value (?)
-Array
-(
-    [0] => 19876926582
-)
-
-insert `je_user` (`phone`) value (?)
-Array
-(
-    [0] => 19876926581
-)
-
-insert `je_user` (`phone`) value (?)
-Array
-(
-    [0] => 19876926580
-)
-
-update `je_user`  set `phone`=? where phone="19876926580"
-Array
-(
-    [0] => 19876926560
+    [:phone_switch] => 0
 )
 
 SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
 Array
 (
-    [:phone_switch] => 1
+    [:phone_switch] => 0
 )
 
 SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
@@ -106,16 +70,2062 @@ Array
     [:phone_switch] => 0
 )
 
-insert `je_user` (phone)value(:phone)
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
 Array
 (
-    [:phone] => 18566125581
+    [:phone_switch] => 0
 )
 
-insert `je_user` (`phone`) value (?)
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
 Array
 (
-    [0] => 19876926580
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
+)
+
+SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch
+Array
+(
+    [:phone_switch] => 0
 )
 
 SELECT phone FROM `je_user` WHERE phone_switch=:phone_switch

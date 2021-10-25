@@ -1,4 +1,5 @@
 <?php
+declare (strict_types = 1);
 //把网址wwww.ma863.comj/blog/show/id/1 转换成$_GET参数      app=blog   act=show   id=1
 function dispatcher(){
 	$var=array();
@@ -24,7 +25,27 @@ function dispatcher(){
  */
 function app(string $name = '', array $args = [], bool $newInstance = false)
 {
-	return pidan\App::getInstance()->make($name ?: pidan\App::class, $args, $newInstance);
+	return $name ? pidan\App::getInstance()->make($name, $args, $newInstance) : pidan\Container::getInstance();
+}
+/**
+ * 绑定一个类到容器
+ * @param string|array $abstract 类标识、接口（支持批量绑定）
+ * @param mixed        $concrete 要绑定的类、闭包或者实例
+ * @return Container
+ */
+function bind($abstract, $concrete = null)
+{
+	return pidan\Container::getInstance()->bind($abstract, $concrete);
+}
+/**
+ * 触发事件
+ * @param mixed $event 事件名（或者类名）
+ * @param mixed $args  参数
+ * @return mixed
+ */
+function event($event, $args = null)
+{
+	return pidan\Container::getInstance()->event->trigger($event, $args);
 }
 /**
  * 调用反射实例化对象或者执行方法 支持依赖注入
@@ -40,6 +61,96 @@ function invoke($call, array $args = [])
 
 	return pidan\Container::getInstance()->invokeClass($call, $args);
 }
+/**
+ * 获取当前应用目录
+ *
+ * @param string $path
+ * @return string
+ */
+function app_path($path = '')
+{
+	return app()->getAppPath() . ($path ? $path . DIRECTORY_SEPARATOR : $path);
+}
+
+/**
+ * 获取应用基础目录
+ *
+ * @param string $path
+ * @return string
+ */
+function base_path($path = '')
+{
+	return app()->getBasePath() . ($path ? $path . DIRECTORY_SEPARATOR : $path);
+}
+/**
+ * 获取web根目录
+ *
+ * @param string $path
+ * @return string
+ */
+function public_path($path = '')
+{
+	return app()->getRootPath() . ($path ? ltrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR : $path);
+}
+/**
+ * 获取应用运行时目录
+ *
+ * @param string $path
+ * @return string
+ */
+function runtime_path($path = '')
+{
+	return app()->getRuntimePath() . ($path ? $path . DIRECTORY_SEPARATOR : $path);
+}
+/**
+ * 获取项目根目录
+ *
+ * @param string $path
+ * @return string
+ */
+function root_path($path = '')
+{
+	return app()->getRootPath() . ($path ? $path . DIRECTORY_SEPARATOR : $path);
+}
+function app_debug(){
+	return app()->isDebug();
+}
+/**
+ * 获取\pidan\response\Redirect对象实例
+ * @param string $url  重定向地址
+ * @param int    $code 状态码
+ * @return \pidan\response\Redirect
+ */
+function redirect(string $url = '', int $code = 302): Redirect
+{
+	return Response::create($url, 'redirect', $code);
+}
+
+/**
+ * 获取当前Request对象实例
+ * @return Request
+ */
+function request(): \pidan\Request
+{
+	return app('request');
+}
+
+/**
+ * 创建普通 Response 对象实例
+ * @param mixed      $data   输出数据
+ * @param int|string $code   状态码
+ * @param array      $header 头信息
+ * @param string     $type
+ * @return Response
+ */
+function response($data = '', $code = 200, $header = [], $type = 'html'): Response
+{
+	return Response::create($data, $type, $code)->header($header);
+}
+
+
+
+
 /**
  * 是否是AJAx提交的
  * @return bool
@@ -81,7 +192,7 @@ function db(){
  * @param mixed $value 配置值
  * @return mixed
  */
-function C($name=null, $value=null) {
+function C($name=null, $value=null,$default=null) {
 	static $_config = array();
 	// 无参数时获取所有
 	if (empty($name)) {
@@ -92,14 +203,14 @@ function C($name=null, $value=null) {
 		$name = strtolower($name);
 		if (!strpos($name, '.')) {
 			if (is_null($value))
-				return isset($_config[$name]) ? $_config[$name] : null;
+				return isset($_config[$name]) ? $_config[$name] : $default;
 			$_config[$name] = $value;
 			return;
 		}
 		// 二维数组设置和获取支持
 		$name = explode('.', $name);
 		if (is_null($value))
-			return isset($_config[$name[0]][$name[1]]) ? $_config[$name[0]][$name[1]] : null;
+			return isset($_config[$name[0]][$name[1]]) ? $_config[$name[0]][$name[1]] : $default;
 		$_config[$name[0]][$name[1]] = $value;
 		return;
 	}
@@ -151,7 +262,7 @@ function redis(){
 		//无空闲连接，创建新连接
 		$redis = new Redis();
 		do{
-			$res = $redis->pconnect(C('REDIS_HOST'), C('REDIS_PORT'));
+			$res = $redis->pconnect(C('REDIS_HOST'), intval(C('REDIS_PORT')));
 		}while(!$res);
 
 		if ('' != C('REDIS_PASSWORD')){
@@ -298,70 +409,43 @@ function I($name,$default='',$filter=null,$is_array=false) {
  * @param mixed $value session值
  * @return mixed
  */
-function session($name,$value='') {
+function session($name=false,$value='') {
 	static $session=null;
 	if(!$session) {
 		$session=new pidan\Session(redis(),'cookie',cookie(C('session_options.name')));
 	}
-	$prefix   =  C('SESSION_PREFIX');//与存入redis前缀不一样
 	if('' === $value){
 		if(0===strpos($name,'?')){ // 检查session  session('?name')
 			$name   =  substr($name,1);
-			return $session->exists($prefix?$prefix.$name:$name);
+			return $session->exists($name);
 		}elseif(is_null($name)){ // 清空session    session(null)
-			if($prefix) {
-				foreach($session->keys() as $v){
-					if(strpos($v,$prefix)===0){
-						$session->set($v,null);
-					}
-				}
-			}else{
-				$session->destroy();
-				$this->session=null;
-			}
+			$session->destroy();
 		}elseif(0===strpos($name,'[')){
 			if('[destroy]'==$name){ // 销毁session   session('[destroy]')
 				$session->destroy();
-				$this->session=null;
 			}elseif('[reset]'==$name){// 销毁重置过期时间   session('[reset]')
 				return $session->reset();
 			}
 			return;
-		}elseif($prefix){ // 获取session         session('username')  session()返回全部    无值false
-			$return=$session->get($name?$prefix.$name:null);
-			foreach($return as $k=>$v){
-				if(0!==strpos($k,$prefix)){
-					unset($return[$k]);
-				}
-			}
-			return $return;
 		}else{
-			return $session->get($name?$name:null);
+			return $session->get($name?:null);
 		}
 	}elseif(is_null($value)){ // 删除session  session('username',null)
-		if($prefix){
-			return $session->set($prefix.$name,null);
-		}else{
-			return $session->set($name,null);
-		}
+		return $session->del($name);
 	}else{ // 设置session   session('username','zhang')
-		if($prefix){
-			return $session->set($prefix.$name,$value);
-		}else{
-			return $session->set($name,$value);
-		}
+		return $session->set($name,$value);
 	}
 }
 function initCache($options=null){
-	static $cache   =   '';
-	if(is_array($options) || empty($cache)) { // 缓存初始化
-		$type=isset($options['type']) ?$options['type']:C('DATA_CACHE_TYPE');
+	static $cache= [];
+	$type=isset($options['type']) ?$options['type']:C('DATA_CACHE_TYPE');
+	if(empty($cache[$type])) { // 缓存初始化
 		$type=strtolower(trim($type));
 		$class='\pidan\cache\\'.ucwords($type);
 		if($options===null)$options=array();
-		$cache = new $class($options);
+		$cache[$type] = new $class($options);
 	}
-	return $cache;
+	return $cache[$type];
 }
 /**
  * 缓存管理  空闲状态  从初始化到获取值一般0.0015内
@@ -384,64 +468,4 @@ function S($name,$value='',$options=null){
 		}
 		return $cache->set($name, $value, $expire);
 	}
-}
-/**
- * 获取当前应用目录
- *
- * @param string $path
- * @return string
- */
-function app_path($path = '')
-{
-	return app()->getAppPath() . ($path ? $path . DIRECTORY_SEPARATOR : $path);
-}
-
-/**
- * 获取应用基础目录
- *
- * @param string $path
- * @return string
- */
-function base_path($path = '')
-{
-	return app()->getBasePath() . ($path ? $path . DIRECTORY_SEPARATOR : $path);
-}
-
-
-
-/**
- * 获取web根目录
- *
- * @param string $path
- * @return string
- */
-function public_path($path = '')
-{
-	return app()->getRootPath() . ($path ? ltrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR : $path);
-}
-
-/**
- * 获取应用运行时目录
- *
- * @param string $path
- * @return string
- */
-function runtime_path($path = '')
-{
-	return app()->getRuntimePath() . ($path ? $path . DIRECTORY_SEPARATOR : $path);
-}
-
-/**
- * 获取项目根目录
- *
- * @param string $path
- * @return string
- */
-function root_path($path = '')
-{
-	return app()->getRootPath() . ($path ? $path . DIRECTORY_SEPARATOR : $path);
-}
-
-function app_debug(){
-	return app()->isDebug();
 }

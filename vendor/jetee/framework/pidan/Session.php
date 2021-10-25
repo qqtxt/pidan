@@ -13,7 +13,7 @@ class Session{
 	private $setcookie=null;//当前session的值
 	private $sid='';//session_id
 	private $pid='';//加$pre的sid  存入redis
-	private $pre='s_';//存入redis的前缀
+	private $pre='se_';//存入redis的前缀
 	
 	//如果有sid  读   没有建  如果有cookie sid =read session memery table 
 	function __construct($redis,$setcookie,$sid='') {
@@ -29,9 +29,9 @@ class Session{
 				$this->sid=$this->random(12);
 				$this->pid=$this->pre.$this->sid;
 			}while($redis->exists($this->pid));
-			$redis->hmset($this->pid,array('a'=>'1'));
+			//$redis->hmset($this->pid,array('a'=>'1'));
 			$redis->expire($this->pid,$expire=C('session_options.expire'));
-			if(IS_CLI){
+			if(PHP_SAPI == 'cli'){
 				$setcookie->cookie(C('session_options.name'),$this->sid,$expire);
 			}else{
 				cookie(C('session_options.name'),$this->sid,$expire);
@@ -50,12 +50,13 @@ class Session{
 	* @return mixed 0修改成功   1新增成功  false失败
 	*/
  	function set($key, $value) {
-		if($value===null){
-			return $this->redis->hdel($this->pid,$key);//成功1  失败0
-		}else{
-			return $this->redis->hset($this->pid,$key,$value);//0修改成功   1新增成功  false失败
-		}
+		return $this->redis->hset($this->pid,$key,$value);//0修改成功   1新增成功  false失败
 	}
+
+	function del($key){
+		return $this->redis->hdel($this->pid,$key);//成功1  失败0
+	}
+
 	/**
 	* 取key值  或全部
 	* @param string $key 标识位置
@@ -79,7 +80,7 @@ class Session{
 	
 	//如果有用户退出或者新用户登陆  就会清除已过期的登陆不用设置radom清垃圾
 	function destroy() {
-		if(IS_CLI){
+		if(PHP_SAPI == 'cli'){
 			$this->setcookie->cookie(C('session_options.name'),null);
 		}else{
 			cookie(C('session_options.name'),null);
@@ -87,8 +88,9 @@ class Session{
 		return $this->redis->del($this->pid);
 	}
 	function reset() {
+		 $this->redis->del($this->pid);
 		$expire=C('session_options.expire');
-		if(IS_CLI){
+		if(PHP_SAPI == 'cli'){
 			$this->setcookie->cookie(C('session_options.name'),$this->sid,$expire);
 		}else{
 			cookie(C('session_options.name'),$this->sid,$expire);

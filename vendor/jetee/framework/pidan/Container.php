@@ -3,7 +3,9 @@ declare (strict_types = 1);
 
 namespace pidan;
 
-
+use ArrayAccess;
+use Countable;
+use Closure;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionFunction;
@@ -16,7 +18,7 @@ use InvalidArgumentException;
 /**
  * App 基础类
  */
-class Container
+class Container implements ArrayAccess,  Countable
 {
 	/**
 	 * 容器对象实例
@@ -60,12 +62,9 @@ class Container
 	{
 		if (is_null(static::$instance)) {
 			static::$instance = new static;
-		}
-
-		if (static::$instance instanceof Closure) {
+		}elseif (static::$instance instanceof Closure) {
 			return (static::$instance)();
 		}
-
 		return static::$instance;
 	}
 	/**
@@ -77,10 +76,40 @@ class Container
 	 */
 	public function instance(string $abstract, $instance)
 	{
+        $abstract = $this->getAlias($abstract);
 		$this->instances[$abstract] = $instance;
 		return $this;
 	}
-	/**
+    /**
+     * 判断容器中是否存在对象实例
+     * @access public
+     * @param string $abstract 类名或者标识
+     * @return bool
+     */
+    public function exists(string $abstract): bool
+    {
+        $abstract = $this->getAlias($abstract);
+
+        return isset($this->instances[$abstract]);
+    }
+    /**
+     * 根据别名获取真实类名    返回最后一个字串
+     * @param  string $abstract
+     * @return string
+     */
+    public function getAlias(string $abstract): string
+    {
+        if (isset($this->bind[$abstract])) {
+            $bind = $this->bind[$abstract];
+
+            if (is_string($bind)) {
+                return $this->getAlias($bind);
+            }
+        }
+
+        return $abstract;
+    }
+    /**
 	 * 注册一个容器对象回调
 	 *
 	 * @param string|Closure $abstract
@@ -93,8 +122,33 @@ class Container
 			$this->invokeCallback['*'][] = $abstract;
 			return;
 		}
-
+        $abstract = $this->getAlias($abstract);
 		$this->invokeCallback[$abstract][] = $callback;
+	}
+	/**
+	 * 绑定一个类、闭包、实例、接口实现到容器
+	 * @access public
+	 * @param string|array $abstract 类标识、接口
+	 * @param mixed        $concrete 要绑定的类、闭包或者实例
+	 * @return $this
+	 */
+	public function bind($abstract, $concrete = null)
+	{
+		if (is_array($abstract)) {
+			foreach ($abstract as $key => $val) {
+				$this->bind($key, $val);
+			}
+		} elseif ($concrete instanceof Closure) {
+			$this->bind[$abstract] = $concrete;
+		} elseif (is_object($concrete)) {
+			$this->instance($abstract, $concrete);
+		} else {
+            $abstract = $this->getAlias($abstract);
+			if ($abstract != $concrete) {
+				$this->bind[$abstract] = $concrete;
+			}
+		}
+		return $this;
 	}
 	/**
 	 * 创建类的实例 已经存在则直接获取
@@ -106,6 +160,7 @@ class Container
 	 */
 	public function make(string $abstract, array $vars = [], bool $newInstance = false)
 	{
+        $abstract = $this->getAlias($abstract);
 		if (isset($this->instances[$abstract]) && !$newInstance) {
 			return $this->instances[$abstract];
 		}
@@ -123,23 +178,37 @@ class Container
 		return $object;
 	}
 	/**
-     * 调用反射执行callable 支持参数绑定
+     * 删除容器中的对象实例
      * @access public
-     * @param mixed $callable
-     * @param array $vars       参数
-     * @param bool  $accessible 设置是否可访问
-     * @return mixed
+     * @param string $name 类名或者标识
+     * @return void
      */
-    public function invoke($callable, array $vars = [], bool $accessible = false)
+    public function delete($name)
     {
-        if ($callable instanceof Closure) {
-            return $this->invokeFunction($callable, $vars);
-        } elseif (is_string($callable) && false === strpos($callable, '::')) {
-            return $this->invokeFunction($callable, $vars);
-        } else {
-            return $this->invokeMethod($callable, $vars, $accessible);
+        $name = $this->getAlias($name);
+
+        if (isset($this->instances[$name])) {
+            unset($this->instances[$name]);
         }
     }
+	/**
+	 * 调用反射执行callable 支持参数绑定
+	 * @access public
+	 * @param mixed $callable
+	 * @param array $vars       参数
+	 * @param bool  $accessible 设置是否可访问
+	 * @return mixed
+	 */
+	public function invoke($callable, array $vars = [], bool $accessible = false)
+	{
+		if ($callable instanceof Closure) {
+			return $this->invokeFunction($callable, $vars);
+		} elseif (is_string($callable) && false === strpos($callable, '::')) {
+			return $this->invokeFunction($callable, $vars);
+		} else {
+			return $this->invokeMethod($callable, $vars, $accessible);
+		}
+	}
 
 	/**
 	 * 执行函数或者闭包方法 支持参数调用
@@ -287,7 +356,7 @@ class Container
 		return $args;
 	}
 	/**
-	 * 获取对象类型的参数值
+	 * 获取对象
 	 * @access protected
 	 * @param string $className 类名
 	 * @param array  $vars      参数
@@ -307,5 +376,50 @@ class Container
 
 		return $result;
 	}
+    public function __set($name, $value)
+    {
+        $this->bind($name, $value);
+    }
+
+    public function __get($name)
+    {
+    	if(isset($this->bind[$name]) || isset($this->instances[$name]))
+        	return $this->make($name);
+    }
+
+    public function __isset($name): bool
+    {
+        return $this->exists($name);
+    }
+
+    public function __unset($name)
+    {
+        $this->delete($name);
+    }
+
+    public function offsetExists($key)
+    {
+        return $this->exists($key);
+    }
+
+    public function offsetGet($key)//可以app()['pidan\Request']
+    {
+        return $this->make($key);
+    }
+
+    public function offsetSet($key, $value)
+    {
+        $this->bind($key, $value);
+    }
+
+    public function offsetUnset($key)
+    {
+        $this->delete($key);
+    }
+    //Countable
+    public function count()
+    {
+        return count($this->instances);
+    }
 
  }

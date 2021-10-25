@@ -50,11 +50,28 @@ class App extends Container
 	 * @var string
 	 */
 	protected $runtimePath = '';
-    /**
-     * 初始化
-     * @var bool
+	/**
+     * 注册的系统服务
+     * @var array
      */
-    protected $initialized = false;
+    protected $services = [];
+	/**
+	 * 初始化
+	 * @var bool
+	 */
+	protected $initialized = false;
+		/**
+	 * 容器绑定标识
+	 * @var array
+	 */
+	protected $bind = [
+		'request'                 => Request::class,
+        'response'                => Response::class,		
+		'http'                    => Http::class,
+		'event'                   => Event::class,
+		'event'                   => Event::class,
+        'middleware'              => Middleware::class,		
+	];
 	/**
 	 * 架构方法
 	 * @access public
@@ -63,23 +80,16 @@ class App extends Container
 	public function __construct(string $rootPath = '')
 	{
 		$this->beginTime = microtime(true);
-        $this->beginMem  = memory_get_usage();
-
+		$this->beginMem  = memory_get_usage();
 		$this->pidanPath   = dirname(__DIR__)  . '/';// /jetee/framework
 		$this->rootPath    = $rootPath ? $rootPath : dirname(dirname(dirname($this->pidanPath))). '/';
 		$this->appPath     = $this->rootPath . 'app' . '/';
 		$this->runtimePath = $this->rootPath . 'runtime' . '/';
-
-		if (is_file($this->appPath . 'provider.php')) {
-			$this->bind(include $this->appPath . 'provider.php');
-		}
-
 		static::setInstance($this);
-
 		$this->instance('pidan\App', $this);
-        $this->instance('pidan\Container', $this);
+		$this->instance('pidan\Container', $this);
 
-
+		$this->initialize();
 	}
 	
 	/**
@@ -172,53 +182,154 @@ class App extends Container
 		return $this->pidanPath;
 	}
 
-    /**
-     * 获取应用开启时间
+	/**
+	 * 获取应用开启时间
+	 * @access public
+	 * @return float
+	 */
+	public function getBeginTime(): float
+	{
+		return $this->beginTime;
+	}
+
+	/**
+	 * 获取应用初始内存占用
+	 * @access public
+	 * @return integer
+	 */
+	public function getBeginMem(): int
+	{
+		return $this->beginMem;
+	}
+	/**
+	 * 是否运行在命令行下
+	 * @return bool
+	 */
+	public function runningInConsole(): bool
+	{
+		return php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg';
+	}
+	/**
+     * 引导应用
      * @access public
-     * @return float
+     * @return void
      */
-    public function getBeginTime(): float
+    public function bootService(): void
     {
-        return $this->beginTime;
+        array_walk($this->services, function ($service) {
+	        if (method_exists($service, 'boot')) {
+	            return $this->invoke([$service, 'boot']);
+	        }
+        });
     }
+	/**
+	 * 处理事件配置文件 app/event.php
+	 * @access protected
+	 * @param array $event 事件数据
+	 * @return void
+	 */
+	public function loadEvent(array $event): void
+	{
+		if (isset($event['bind'])) {
+			$this->event->bind($event['bind']);
+		}
 
-    /**
-     * 获取应用初始内存占用
-     * @access public
-     * @return integer
-     */
-    public function getBeginMem(): int
-    {
-        return $this->beginMem;
-    }
-    /**
-     * 初始化应用
-     * @access public
-     * @return $this
-     */
-    public function initialize()
-    {
-        $this->initialized = true;
-        $this->appDebug  = true;
-        define('IS_CGI',substr(PHP_SAPI, 0,3)=='cgi' ? 1 : 0 );
-		define('IS_WIN',strstr(PHP_OS, 'WIN') ? 1 : 0 );
-		define('IS_CLI',PHP_SAPI=='cli'? 1   :   0);
+		if (isset($event['listen'])) {
+			$this->event->listenEvents($event['listen']);
+		}
 
-        // 加载全局初始化文件
-        if (is_file($this->appPath . 'common.php')) {
-            include_once $this->appPath. 'common.php';
-        }
-        include_once $this->pidanPath . 'helper.php';
-        C(include $this->appPath.'/config.php');
-        dispatcher();
-		$app=isset($_GET['app']) ? $_GET['app'] : 'index';
-		$act=isset($_GET['act']) ? $_GET['act'] : 'index';
-		$app='app\controller\\'.$app;
-		invoke([$app,$act]);
-		$controller = new $app($act);
-        //date_default_timezone_set($this->config->get('app.default_timezone', 'Asia/Shanghai'));
+		if (isset($event['subscribe'])) {
+			$this->event->subscribe($event['subscribe']);
+		}
+	}
+	/**
+	 * 初始化应用
+	 * @access public
+	 * @return $this
+	 */
+	public function initialize()
+	{
+		$this->initialized = true;
+		include_once $this->pidanPath . 'helper.php';
+		C(include $this->appPath.'/config.php');
+		$this->appDebug = C('app_debug') ? true :false;
+		ini_set('display_errors', $this->appDebug ? 'On' : 'Off');
+		if (!$this->runningInConsole()) {
+			//重新申请一块比较大的buffer
+			if (ob_get_level() > 0) {
+				$output = ob_get_clean();
+			}
+			ob_start();
+			if (!empty($output)) {
+				echo $output;
+			}
+		}
+		
+		if (is_file($this->appPath . 'common.php')) {//加载应用函数
+			include_once $this->appPath. 'common.php';
+		}
+		if (is_file($this->appPath . 'event.php')) {
+			$this->loadEvent(include $this->appPath . 'event.php');
+		}
+		if (is_file($this->appPath . 'service.php')) {
+			$services = include $this->appPath . 'service.php';
+			foreach ($services as $service) {
+				$this->register($service);
+			}
+		}
+		// 加载应用默认语言包
+		//$this->loadLangPack($langSet);
+		// 监听AppInit
+		$this->event->trigger('AppInit');
+		date_default_timezone_set(C('default_timezone'));
 
-        return $this;
-    }
+		$this->bootService();
 
+
+		// dispatcher();
+		// $app=isset($_GET['app']) ? $_GET['app'] : 'index';
+		// $act=isset($_GET['act']) ? $_GET['act'] : 'index';
+		// $app='app\controller\\'.$app;
+		// echo $this->invokeMethod([$app,$act]);
+		//$controller = new $app($act);
+		
+
+		return $this;
+	}
+	/**
+	 * 注册服务
+	 * @access public
+	 * @param Service|string $service 服务
+	 * @param bool           $force   强制重新注册
+	 * @return Service|null
+	 */
+	public function register($service, bool $force = false)
+	{
+		$registered = $this->getService($service);//已经实例化
+		if ($registered && !$force) {
+			return $registered;
+		}
+		if (is_string($service)) {
+			$service = new $service($this);
+		}
+		if (method_exists($service, 'register')) {
+			$service->register();
+		}
+		if (property_exists($service, 'bind')) {
+			$this->bind($service->bind);
+		}
+		$this->services[] = $service;
+	}
+	/**
+	 * 给定的服务已经实例化  返回实例  否则返回null  
+	 * @param string|Service $service
+	 * @return Service|null
+	 */
+	public function getService($service)
+	{
+		$name = is_string($service) ? $service : get_class($service);
+		return array_values(array_filter($this->services, function ($value) use ($name) {
+			return $value instanceof $name;
+		}, ARRAY_FILTER_USE_BOTH))[0] ?? null;
+	}
 }
