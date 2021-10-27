@@ -3,6 +3,7 @@ declare (strict_types = 1);
 
 namespace pidan;
 
+use pidan\db\Mysql;
 /**
  * App 基础类
  */
@@ -16,17 +17,6 @@ class App extends Container
 	 */
 	protected $appDebug = false;
 
-	/**
-	 * 应用开始时间
-	 * @var float
-	 */
-	protected $beginTime;
-
-	/**
-	 * 应用内存初始占用
-	 * @var integer
-	 */
-	protected $beginMem;
 	/**
 	 * 应用根目录
 	 * @var string
@@ -51,26 +41,28 @@ class App extends Container
 	 */
 	protected $runtimePath = '';
 	/**
-     * 注册的系统服务
-     * @var array
-     */
-    protected $services = [];
+	 * 注册的系统服务
+	 * @var array
+	 */
+	protected $services = [];
 	/**
 	 * 初始化
 	 * @var bool
 	 */
 	protected $initialized = false;
+
 		/**
 	 * 容器绑定标识
 	 * @var array
 	 */
 	protected $bind = [
 		'request'                 => Request::class,
-        'response'                => Response::class,		
 		'http'                    => Http::class,
 		'event'                   => Event::class,
 		'event'                   => Event::class,
-        'middleware'              => Middleware::class,		
+		'middleware'              => Middleware::class,
+		'config'                  => Config::class,
+		'db'                  	  => Mysql::class,
 	];
 	/**
 	 * 架构方法
@@ -79,17 +71,16 @@ class App extends Container
 	 */
 	public function __construct(string $rootPath = '')
 	{
-		$this->beginTime = microtime(true);
-		$this->beginMem  = memory_get_usage();
+		$this->G('begin');
 		$this->pidanPath   = dirname(__DIR__)  . '/';// /jetee/framework
 		$this->rootPath    = $rootPath ? $rootPath : dirname(dirname(dirname($this->pidanPath))). '/';
 		$this->appPath     = $this->rootPath . 'app' . '/';
 		$this->runtimePath = $this->rootPath . 'runtime' . '/';
 		static::setInstance($this);
 		$this->instance('pidan\App', $this);
-		$this->instance('pidan\Container', $this);
-
+		$this->instance('pidan\Container', $this);      
 		$this->initialize();
+		$this->G('initialized');
 	}
 	
 	/**
@@ -181,26 +172,6 @@ class App extends Container
 	{
 		return $this->pidanPath;
 	}
-
-	/**
-	 * 获取应用开启时间
-	 * @access public
-	 * @return float
-	 */
-	public function getBeginTime(): float
-	{
-		return $this->beginTime;
-	}
-
-	/**
-	 * 获取应用初始内存占用
-	 * @access public
-	 * @return integer
-	 */
-	public function getBeginMem(): int
-	{
-		return $this->beginMem;
-	}
 	/**
 	 * 是否运行在命令行下
 	 * @return bool
@@ -210,18 +181,18 @@ class App extends Container
 		return php_sapi_name() === 'cli' || php_sapi_name() === 'phpdbg';
 	}
 	/**
-     * 引导应用
-     * @access public
-     * @return void
-     */
-    public function bootService(): void
-    {
-        array_walk($this->services, function ($service) {
-	        if (method_exists($service, 'boot')) {
-	            return $this->invoke([$service, 'boot']);
-	        }
-        });
-    }
+	 * 引导应用
+	 * @access public
+	 * @return void
+	 */
+	public function bootService(): void
+	{
+		array_walk($this->services, function ($service) {
+			if (method_exists($service, 'boot')) {
+				return $this->invoke([$service, 'boot']);
+			}
+		});
+	}
 	/**
 	 * 处理事件配置文件 app/event.php
 	 * @access protected
@@ -251,7 +222,8 @@ class App extends Container
 	{
 		$this->initialized = true;
 		include_once $this->pidanPath . 'helper.php';
-		C(include $this->appPath.'/config.php');
+		$this->config->load($this->appPath.'/config.php');
+		//C(include $this->appPath.'/config.php');
 		$this->appDebug = C('app_debug') ? true :false;
 		ini_set('display_errors', $this->appDebug ? 'On' : 'Off');
 		if (!$this->runningInConsole()) {
@@ -332,4 +304,72 @@ class App extends Container
 			return $value instanceof $name;
 		}, ARRAY_FILTER_USE_BOTH))[0] ?? null;
 	}
+	/**
+	 * 设置和获取统计数据
+	 * 使用方法:
+	 * <code>
+	 * N('db',1,86400); // 记录数据库操作次数 持久1天
+	 * N('read',1); // 记录读取次数
+	 * echo N('db',0,86400); // 获取当前页面数据库的所有操作次数  从缓冲中读
+	 * echo N('read'); // 获取当前页面读取次数
+	 * </code> 
+	 * @param string  $key 标识位置
+	 * @param integer $step 步进值
+	 * @param integer $save 持久缓冲时间 
+	 * @return mixed
+	 */
+	public function N($key, $step=0,$save=false) {
+		static $_num    = array();
+		if (!isset($_num[$key])) {
+			$_num[$key] = (false !== $save)? S('N_'.$key) :  0;
+		}
+		if (empty($step))
+			return $_num[$key];
+		else
+			$_num[$key] = $_num[$key] + (int) $step;
+		if(false !== $save){ // 保存结果
+			S('N_'.$key,$_num[$key],$save);
+		}
+	}
+	/**
+	 * 记录和统计时间（微秒）和内存使用情况
+	 * 使用方法:
+	 * <code>
+	 * G('begin',floatval)  // 记录标记位
+	 * echo G('begin','end',8)  //end可以不定义 精确到小数后8位
+	 * G('begin'); // 记录开始标记位
+	 * // ... 区间运行代码
+	 * G('end'); // 记录结束标签位
+	 * echo G('begin','end',6); // 统计区间运行时间 精确到小数后6位
+	 * echo G('begin','end','m'); // 统计区间内存使用情况
+	 * 如果end标记位没有定义，则会自动以当前作为标记位
+	 * 其中统计内存使用需要 MEMORY_LIMIT_ON 常量为true才有效
+	 * </code>
+	 * @param string $start 开始标签
+	 * @param string $end 结束标签
+	 * @param integer|string $dec 小数位或者m 
+	 * @return mixed
+	 */
+	function G($start,$end='',$dec=5) {
+		static $_info       =   array();
+		static $_mem        =   array();
+		if(is_float($end)) { // 记录时间        G('begin',3889999999.12) 
+			$_info[$start]  =   $end;
+		}elseif(!empty($end)){ // 统计时间和内存使用          G('begin','end')   end可以没记录过
+			if(!isset($_info[$end])) $_info[$end]       =  microtime(TRUE);
+			if($dec=='m'){
+				if(!isset($_mem[$end])) $_mem[$end]     =  memory_get_usage();
+				return number_format(($_mem[$end]-$_mem[$start])/1024);          
+			}else{
+				return number_format(($_info[$end]-$_info[$start]),$dec);
+			}       
+				
+		}elseif(strpos($start,'?')===0){                            //G('?begin') 
+			return $dec=='m'? $_mem[substr($start,1)] : $_info[substr($start,1)];
+		}else{ // 记录时间和内存使用      G('begin') 
+			$_info[$start]  =  microtime(TRUE);
+			$_mem[$start]   =  memory_get_usage();
+		}
+	}
+
 }

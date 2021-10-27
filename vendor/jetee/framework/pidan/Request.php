@@ -154,6 +154,11 @@ class Request implements ArrayAccess
 	// php://input
 	protected $input;
 	/**
+	 * 是否允许请求缓存  未过期的304与redis缓冲
+	 * @var bool
+	 */
+	protected $allowCache = true;
+	/**
 	 * 架构函数
 	 * @access public
 	 */
@@ -1972,6 +1977,27 @@ class Request implements ArrayAccess
 		return $this;
 	}
 
+	/**
+	 * 是否允许请求缓存
+	 * @access public
+	 * @return bool
+	 */
+	public function isAllowCache()
+	{
+		return $this->allowCache;
+	}
+	/**
+	 * 是否允许请求缓存
+	 * @access public
+	 * @param  bool $cache 允许请求缓存
+	 * @return $this
+	 */
+	public function allowCache(bool $cache)
+	{
+		$this->allowCache = $cache;
+
+		return $this;
+	}
 	/**
 	 * 设置中间传递数据
 	 * @access public

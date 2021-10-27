@@ -31,11 +31,6 @@ abstract class Response
 	 */
 	protected $code = 200;
 
-	/**
-	 * 是否允许请求缓存
-	 * @var bool
-	 */
-	protected $allowCache = true;
 
 	/**
 	 * 输出参数
@@ -162,29 +157,6 @@ abstract class Response
 	}
 
 	/**
-	 * 是否允许请求缓存
-	 * @access public
-	 * @param  bool $cache 允许请求缓存
-	 * @return $this
-	 */
-	public function allowCache(bool $cache)
-	{
-		$this->allowCache = $cache;
-
-		return $this;
-	}
-
-	/**
-	 * 是否允许请求缓存
-	 * @access public
-	 * @return bool
-	 */
-	public function isAllowCache()
-	{
-		return $this->allowCache;
-	}
-
-	/**
 	 * 设置响应头
 	 * @access public
 	 * @param  array $header  参数
@@ -205,14 +177,6 @@ abstract class Response
 	 */
 	public function content($content)
 	{
-		if (null !== $content && !is_string($content) && !is_numeric($content) && !is_callable([
-			$content,
-			'__toString',
-		])
-		) {
-			throw new \InvalidArgumentException(sprintf('variable type error： %s', gettype($content)));
-		}
-
 		$this->content = (string) $content;
 
 		return $this;
@@ -330,15 +294,7 @@ abstract class Response
 	public function getContent(): string
 	{
 		if (null == $this->content) {
-			$content = $this->output($this->data);
-
-			if (null !== $content && !is_string($content) && !is_numeric($content) && !is_callable([
-				$content,
-				'__toString',
-			])
-			) {
-				throw new \InvalidArgumentException(sprintf('variable type error： %s', gettype($content)));
-			}
+			$content = $this->output($this->data);			
 
 			$this->content = (string) $content;
 		}

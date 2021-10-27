@@ -2,7 +2,8 @@
 // 全局中间件定义文件
 return [
     // 全局请求缓存
-     \pidan\middleware\CheckRequestCache::class,
+    //\pidan\middleware\CheckRequestCache::class,
+    \pidan\middleware\ShowRuntime::class,     
     // 多语言加载
     // \pidan\middleware\LoadLangPack::class,
     // Session初始化

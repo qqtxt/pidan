@@ -32,7 +32,7 @@ class Redis implements Cache{
 	 * @access public
 	 */
 	public function __construct($options=array()) {
-		$this->options =  $options;
+		$this->options =  is_array($options) ? $options : [];
 		$this->options['expire'] =  isset($options['expire'])?  $options['expire']  :   C('DATA_CACHE_TIME');
 		$this->options['prefix'] =  isset($options['prefix'])?  $options['prefix']  :   C('DATA_CACHE_PREFIX');        
 		$this->options['length'] =  isset($options['length'])?  $options['length']  :   0;        

@@ -39,6 +39,12 @@ class Mysql implements Db
 		);
 		$this->connect();
 	}
+
+	public static function __make(App $app)
+	{
+		$config=$app->config->get('datebase');
+		return new static(C('DB_HOST'), C('DB_USER'), C('DB_PWD'), C('DB_NAME'), C('DB_PREFIX')));
+	}
 	/**
 	 * 创建 PDO 实例
 	 */
@@ -158,7 +164,7 @@ class Mysql implements Db
 		}
 	}
 	/**
-	 * 执行 SQL   统一调用它查询   不得已才用execute
+	 * 执行 SQL   统一调用它查询   不用execute
 	 *
 	 * @param string $query
 	 * @param array  $params
@@ -168,6 +174,7 @@ class Mysql implements Db
 	 */
 	public function query($query = '', $params = null, $fetchmode = PDO::FETCH_ASSOC,$exec=0)
 	{
+		app()->N('db_query',1);
 		$query = $this->prefix(trim($query));
 		$this->lastSql = $query;
 		$this->execute($query, $params);
@@ -178,8 +185,10 @@ class Mysql implements Db
 		if ($statement === 'select' || $statement === 'show') {
 			return $this->sQuery->fetchAll($fetchmode);
 		} elseif ($statement === 'update' || $statement === 'delete' || $statement === 'replace') {
+			app()->N('db_write',1);
 			return $this->sQuery->rowCount();
 		} elseif ($statement === 'insert') {
+			app()->N('db_write',1);
 			if ($this->sQuery->rowCount() > 0) {
 				return $this->lastInsertId();
 			}

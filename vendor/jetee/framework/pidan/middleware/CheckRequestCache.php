@@ -21,7 +21,7 @@ class CheckRequestCache
 		// 请求缓存规则  得出缓存键名
 		'request_cache_key'    => true, //Closure true 除了上两个以下可同时带 最后带|$func 可带__CONTROLLER__ __ACTION__ __URL__   :key用param中的值取代
 		// 请求缓存有效期
-		'request_cache_expire' => null,
+		'request_cache_expire' => 3600,	//缓冲时间秒  必须要有
 		// 全局请求缓存排除规则
 		'request_cache_except' => [],
 		// 请求缓存的key的前缀
@@ -78,7 +78,7 @@ class CheckRequestCache
 
 		$response = $next($request);
 
-		if (isset($cache) && $cache  && 200 == $response->getCode() && $response->isAllowCache()) {
+		if (isset($cache) && $cache  && 200 == $response->getCode() && $request->isAllowCache()) {
 			$header                  = $response->getHeader();
 			$header['Cache-Control'] = 'max-age=' . $expire . ',must-revalidate';
 			$header['Last-Modified'] = gmdate('D, d M Y H:i:s') . ' GMT';

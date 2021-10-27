@@ -442,7 +442,7 @@ function initCache($options=null){
 	if(empty($cache[$type])) { // 缓存初始化
 		$type=strtolower(trim($type));
 		$class='\pidan\cache\\'.ucwords($type);
-		if($options===null)$options=array();
+		$options=$options??[];
 		$cache[$type] = new $class($options);
 	}
 	return $cache[$type];
@@ -457,10 +457,13 @@ function initCache($options=null){
 function S($name,$value='',$options=null){
 	$cache=initCache($options);
 	if(''=== $value){//获取缓存
+		app()->N('cache_read',1);
 		return $cache->get($name);
 	}elseif(is_null($value)) {//删除缓存
+		app()->N('cache_write',1);
 		return $cache->rm($name);
 	}else {//缓存数据
+		app()->N('cache_write',1);
 		if(is_array($options)) {
 			$expire     =   isset($options['expire'])?$options['expire']:NULL;
 		}else{

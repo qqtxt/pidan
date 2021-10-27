@@ -8,5 +8,6 @@ $http = (new App())->http;
 $response = $http->run();
 $response->send();
 $http->end($response);
+echo '<br>'.(microtime(true)-$getBeginTime);
+file_put_contents('timeout.txt', microtime(true)-$getBeginTime);
 
-echo microtime(true)-$getBeginTime;

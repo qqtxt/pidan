@@ -1,12 +1,14 @@
 <?php
 //大小写一样
-return array(
-	'db_name'           =>'pinhuo_jt2100_co',
-	'db_host'           =>'127.0.0.1',
-	'db_user'           =>'pinhuo_jt2100_co',
-	'db_pwd'            =>'Mrpt6MdLbH2DZa7L',
-	'db_prefix'         =>'je_',
-    'db_port'           =>'3306',
+return [
+    'datebase'=>[
+        'db_name'           =>'pinhuo_jt2100_co',
+        'db_host'           =>'127.0.0.1',
+        'db_user'           =>'pinhuo_jt2100_co',
+        'db_pwd'            =>'Mrpt6MdLbH2DZa7L',
+        'db_prefix'         =>'je_',
+        'db_port'           =>'3306',
+    ]
 
     /*应用配置*/
     'app_debug'             =>true,
@@ -37,5 +39,4 @@ return array(
 	'redis_password'	=>'',
 	'redis_select'		=>6,	
 
-
-);
+];
