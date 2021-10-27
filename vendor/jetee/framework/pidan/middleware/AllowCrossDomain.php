@@ -21,7 +21,7 @@ class AllowCrossDomain
 
     public function __construct()
     {
-        $this->cookieDomain = C('cookie.domain');
+        $this->cookieDomain = app('config')->get('cookie.domain');
     }
 
     /**

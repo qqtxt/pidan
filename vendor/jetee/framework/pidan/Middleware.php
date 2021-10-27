@@ -188,7 +188,7 @@ class Middleware
         }
 
         //中间件别名检查
-        $alias = C('middleware.alias',NULL,[]);
+        $alias = $this->app->config->get('middleware.alias',[]);
 
         if (isset($alias[$middleware])) {
             $middleware = $alias[$middleware];
@@ -209,7 +209,7 @@ class Middleware
      */
     protected function sortMiddleware(array $middlewares)
     {
-        $priority = C('middleware.priority',NULL, []);
+        $priority = $this->app->config->get('middleware.priority', []);
         uasort($middlewares, function ($a, $b) use ($priority) {
             $aPriority = $this->getMiddlewarePriority($priority, $a);
             $bPriority = $this->getMiddlewarePriority($priority, $b);

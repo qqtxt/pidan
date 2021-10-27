@@ -4,6 +4,7 @@ declare (strict_types = 1);
 namespace pidan;
 
 use pidan\db\Mysql;
+use pidan\cache\Redis;
 /**
  * App 基础类
  */
@@ -63,6 +64,8 @@ class App extends Container
 		'middleware'              => Middleware::class,
 		'config'                  => Config::class,
 		'db'                  	  => Mysql::class,
+		'cache'                   => Redis::class,
+		'session'                 => Session::class,
 	];
 	/**
 	 * 架构方法
@@ -221,10 +224,8 @@ class App extends Container
 	public function initialize()
 	{
 		$this->initialized = true;
-		include_once $this->pidanPath . 'helper.php';
 		$this->config->load($this->appPath.'/config.php');
-		//C(include $this->appPath.'/config.php');
-		$this->appDebug = C('app_debug') ? true :false;
+		$this->appDebug = $this->config->get('app.app_debug') ? true :false;
 		ini_set('display_errors', $this->appDebug ? 'On' : 'Off');
 		if (!$this->runningInConsole()) {
 			//重新申请一块比较大的buffer
@@ -236,7 +237,7 @@ class App extends Container
 				echo $output;
 			}
 		}
-		
+		include_once $this->pidanPath . 'helper.php';
 		if (is_file($this->appPath . 'common.php')) {//加载应用函数
 			include_once $this->appPath. 'common.php';
 		}
@@ -253,7 +254,7 @@ class App extends Container
 		//$this->loadLangPack($langSet);
 		// 监听AppInit
 		$this->event->trigger('AppInit');
-		date_default_timezone_set(C('default_timezone'));
+		date_default_timezone_set($this->config->get('app.default_timezone'));
 
 		$this->bootService();
 

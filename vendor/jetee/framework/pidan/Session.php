@@ -9,36 +9,45 @@ namespace pidan;
  */
 class Session{
 	//private
-	private $redis=array();//当前session的值
-	private $setcookie=null;//当前session的值
-	private $sid='';//session_id
-	private $pid='';//加$pre的sid  存入redis
-	private $pre='se_';//存入redis的前缀
+	protected $redis=null;
+	protected $setcookie=null;//swoole cookie操作
+	protected $sid='';//session_id
+	protected $pid='';//加$prefix的sid  存入redis
+	protected $config=['prefix'=>'','expire'=>3600,'cookie_name'=>'_s_'];
 	
 	//如果有sid  读   没有建  如果有cookie sid =read session memery table 
-	function __construct($redis,$setcookie,$sid='') {
-		$this->redis=$redis;
+	public function __construct($setcookie='') {
+		$this->redis=redis();
 		$this->setcookie=$setcookie;
+		$this->config=array_merge($this->config,app('config')->get('session'));
+		if(PHP_SAPI == 'cli'){
+			$sid=$setcookie->cookie($this->config['cookie_name']);
+		}else{
+			$sid=cookie($this->config['cookie_name']);
+		}
 		if($sid) {
 			$this->sid=$sid;
-			$this->pid=$this->pre.$sid;
+			$this->pid=$this->config['prefix'].$sid;
 		}
 		//如果不存在 创建
-		if($this->pid=='' || !$redis->exists($this->pid)) {
+		if(empty($this->sid) || !$this->redis->exists($this->pid)) {
 			do{
 				$this->sid=$this->random(12);
-				$this->pid=$this->pre.$this->sid;
-			}while($redis->exists($this->pid));
+				$this->pid=$this->config['prefix'].$this->sid;
+			}while($this->redis->exists($this->pid));
 			//$redis->hmset($this->pid,array('a'=>'1'));
-			$redis->expire($this->pid,$expire=C('session_options.expire'));
+			$this->redis->expire($this->pid,$this->config['expire']);
 			if(PHP_SAPI == 'cli'){
-				$setcookie->cookie(C('session_options.name'),$this->sid,$expire);
+				$setcookie->cookie($this->config['cookie_name'],$this->sid,$this->config['expire']);
 			}else{
-				cookie(C('session_options.name'),$this->sid,$expire);
+				cookie($this->config['cookie_name'],$this->sid,$this->config['expire']);
 			}
 		}
 	}
-
+	public static function __make()
+	{
+		return new static();
+	}
 	/**
 	* 设置或删除key
 	* 使用方法:
@@ -49,51 +58,52 @@ class Session{
 	* @param mixed  $value
 	* @return mixed 0修改成功   1新增成功  false失败
 	*/
- 	function set($key, $value) {
+ 	public function set($key, $value) {
 		return $this->redis->hset($this->pid,$key,$value);//0修改成功   1新增成功  false失败
 	}
-
-	function del($key){
+	public function delete($key){
 		return $this->redis->hdel($this->pid,$key);//成功1  失败0
 	}
-
 	/**
-	* 取key值  或全部
+	* 取key值 
 	* @param string $key 标识位置
-	* @param mixed  $value
 	* @return mixed 0修改成功   1新增成功  false失败
 	*/	
-	function get($key=null) {
-		if($key===null){
-			return $this->redis->hgetall($this->pid);//没有值为空数组   array()
-		}
+	public function get($key) {
 		return $this->redis->hget($this->pid,$key);//没有值为false
 	}
-	//取所有字段名
-	function keys() {
-		return $this->redis->hkeys($this->pid);//没有值为空数组   array()
-	}	
- 	function exists($key) {
+ 	public function has($key) {
 		return $this->redis->hexists($this->pid,$key);//成功true  失败false
 	}
-
-	
+	public function all(){
+		return $this->redis->hgetall($this->pid);//没有值为空数组   array()
+	}
 	//如果有用户退出或者新用户登陆  就会清除已过期的登陆不用设置radom清垃圾
-	function destroy() {
+	public function clear() {
 		if(PHP_SAPI == 'cli'){
-			$this->setcookie->cookie(C('session_options.name'),null);
+			$this->setcookie->cookie($this->config['cookie_name'],null);
 		}else{
-			cookie(C('session_options.name'),null);
+			cookie($this->config['cookie_name'],null);
 		}
 		return $this->redis->del($this->pid);
 	}
-	function reset() {
-		 $this->redis->del($this->pid);
-		$expire=C('session_options.expire');
+	public function pull($key) {
+		$return=$this->redis->hget($this->pid,$key);
+		$this->delete($this->pid,$key);
+		return $return;//没有值为false
+	}
+
+	//取所有字段名
+	public function keys() {
+		return $this->redis->hkeys($this->pid);//没有值为空数组   array()
+	}	
+	public function reset() {
+		$this->redis->del($this->pid);
+		$expire=$this->config['expire'];
 		if(PHP_SAPI == 'cli'){
-			$this->setcookie->cookie(C('session_options.name'),$this->sid,$expire);
+			$this->setcookie->cookie($this->config['cookie_name'],$this->sid,$expire);
 		}else{
-			cookie(C('session_options.name'),$this->sid,$expire);
+			cookie($this->config['cookie_name'],$this->sid,$expire);
 		}
 		return $this->redis->expire($this->pid,$expire);
 	}
@@ -103,7 +113,7 @@ class Session{
 	 * @param   bool	$numeric	是纯数字，还是数字加字母
 	 * @return  str		随机数串
 	 */
-	function random($length) {
+	protected function random($length) {
 		$seed = base_convert(md5(microtime()), 16, 35);
 		$seed .= 'zZ'.strtoupper($seed);
 		$hash = '';

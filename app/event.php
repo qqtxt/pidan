@@ -10,7 +10,7 @@ return [
         'HttpRun'  => [],
         'HttpEnd'  => [],
         'LogWrite' => [],
-        //'UserLogin'=>[function(){echo 'UserLogin';}]
+        'UserLogin'=>[function(){echo 'UserLogin<br/>';}]
     ],
 
     'subscribe' => [

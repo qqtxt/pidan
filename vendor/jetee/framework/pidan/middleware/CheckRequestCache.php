@@ -30,8 +30,8 @@ class CheckRequestCache
 
 	public function __construct()
 	{	
-		$route=C('route');
-		$this->config = array_merge($this->config, is_array($route) ? $route : []);
+		$route=app('config')->get('route');
+		if($route)$this->config = array_merge($this->config,$route) ;
 	}
 
 	/**

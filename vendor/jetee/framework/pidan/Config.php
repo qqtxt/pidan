@@ -120,9 +120,7 @@ class Config
 	 */
 	protected function pull(string $name): array
 	{
-		$name = strtolower($name);
-
-		return $this->config[$name] ?? [];
+		return $this->config[strtolower($name)] ?? [];
 	}
 
 	/**

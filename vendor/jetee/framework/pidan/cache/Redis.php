@@ -20,25 +20,28 @@ class Redis implements Cache{
      */
     protected $handler;
 
+    protected $app;
+
     /**
      * 缓存连接参数
      * @var integer
      * @access protected
      */
-    protected $options = array();
+    protected $options = ['type'=>'','expire'=>null,'prefix'=>''];
 	 /**
 	 * 架构函数
 	 * @param array $options 缓存参数 
 	 * @access public
 	 */
-	public function __construct($options=array()) {
-		$this->options =  is_array($options) ? $options : [];
-		$this->options['expire'] =  isset($options['expire'])?  $options['expire']  :   C('DATA_CACHE_TIME');
-		$this->options['prefix'] =  isset($options['prefix'])?  $options['prefix']  :   C('DATA_CACHE_PREFIX');        
-		$this->options['length'] =  isset($options['length'])?  $options['length']  :   0;        
-		$this->handler  = redis();
+	public function __construct($options=array(),$handler=null) {
+		$this->app=app();
+		$this->options = array_merge($this->options,app('config')->get('cache'),$options);
+		$this->handler  = $handler ?? redis();
 	}
-
+	public static function __make()
+	{
+		return new static();
+	}
 	/**
 	 * 通用读取缓存
 	 * @access public
@@ -46,6 +49,7 @@ class Redis implements Cache{
 	 * @return mixed  无数据返回 false
 	 */
 	public function get($name) {
+		$this->app->N('cache_read',1);
 		$value = $this->handler->get($this->options['prefix'].$name);
 		$jsonData  = json_decode((string) $value, true );
 		return ($jsonData === NULL) ? $value : $jsonData;	//检测是否为JSON数据 true 返回JSON解析数组, false返回源数据
@@ -59,6 +63,7 @@ class Redis implements Cache{
 	 * @return boolen
 	 */
 	public function set($name, $value, $expire = null) {
+		$this->app->N('cache_write',1);
 		$name   =   $this->options['prefix'].$name;
 		//对数组/对象数据进行缓存处理，保证数据完整性
 		$value  =  (is_object($value) || is_array($value)) ? json_encode($value) : $value;
@@ -86,6 +91,7 @@ class Redis implements Cache{
 	 * @return boolen
 	 */
 	public function rm($name) {
+		$this->app->N('cache_write',1);
 		return $this->handler->delete($this->options['prefix'].$name);
 	}
 

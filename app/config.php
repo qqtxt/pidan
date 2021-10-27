@@ -1,42 +1,49 @@
 <?php
 //大小写一样
 return [
-    'datebase'=>[
-        'db_name'           =>'pinhuo_jt2100_co',
-        'db_host'           =>'127.0.0.1',
-        'db_user'           =>'pinhuo_jt2100_co',
-        'db_pwd'            =>'Mrpt6MdLbH2DZa7L',
-        'db_prefix'         =>'je_',
-        'db_port'           =>'3306',
-    ]
+	'datebase'=>[
+		'db_name'           =>'pinhuo_jt2100_co',
+		'db_host'           =>'127.0.0.1',
+		'db_user'           =>'pinhuo_jt2100_co',
+		'db_pwd'            =>'Mrpt6MdLbH2DZa7L',
+		'db_prefix'         =>'je_',
+		'db_port'           =>'3306',
+	],
+	/*应用配置*/
+	'app'=>[
+		'app_debug'             =>true,
+		'default_timezone'      => 'Asia/Shanghai',
+		'default_filter'        => 'trim',//I函数默认过滤
+	],
+	/* Cookie设置 */
+    'cookie'=>[
+    	'prefix'         => '', // cookie 名称前缀
+		'expire'         => 0,       		// 有效期
+		'domain'         => '',//defined('COOKIE_DOMAIN') ? COOKIE_DOMAIN :'', // Cookie有效域名
+		'path'           => '/',     // Cookie路径
+		'secure'         => defined('IS_SSL') ?  (IS_SSL ? true : false) :'',     // Cookie路径
+		'httponly'       => true,     // Cookie路径
+    ],
+	/* SESSION设置 */
+    'session'=>[
+		'expire'        => 3600*24, //过期
+		'cookie_name'   => '_s_',	//cookie
+		'prefix'		=> 'se_',   //redis 或其它缓冲前缀
+		'type'          => 'Redis', // session hander驱动Redis  或空为系统自带
+	],
 
-    /*应用配置*/
-    'app_debug'             =>true,
-    'default_timezone'      => 'Asia/Shanghai',
-    'default_filter'        => 'trim',//I函数默认过滤
-	
-	
-    /* Cookie设置 */
-    'cookie_expire'         => 0,       		// 有效期
-    'COOKIE_DOMAIN'         => '',//defined('COOKIE_DOMAIN') ? COOKIE_DOMAIN :'', // Cookie有效域名
-    'cookie_path'           => '/',     // Cookie路径
-    'cookie_secure'         => defined('IS_SSL') ?  (IS_SSL ? true : false) :'',     // Cookie路径
-    'cookie_httponly'       => true,     // Cookie路径
-	
-    /* SESSION设置 */
-    'session_options'       => array('expire'=>3600*24,'name'=>'_s_'), // session 配置数组 支持expire name(cookie name) domain 等参数 'domain'=>defined('COOKIE_DOMAIN') ? COOKIE_DOMAIN :''
-    'session_type'          => 'Redis', // session hander驱动Redis  或空为系统自带
-
-
-    /* 数据缓存设置与页面缓冲不一样*/
-    'data_cache_time'       => NULL,      // 数据缓存有效期 NULL表示永久缓存
-    'data_cache_type'       => 'Redis',  // 数据缓存类型,支持:File|Db|Apc|Memcache|Shmop|Sqlite|Xcache|Apachenote|Eaccelerator|Redis	
-   	'data_cache_prefix'     => 'c_',     // 缓存前缀
-
+	/* 数据缓存设置与页面缓冲不一样*/
+    'cache'=>[
+		'expire'        => NULL,      // 数据缓存有效期 NULL表示永久缓存
+		'type'          => 'Redis',  // 数据缓存类型,支持:File|Db|Apc|Memcache|Shmop|Sqlite|Xcache|Apachenote|Eaccelerator|Redis	
+		'prefix'        => 'ca_',     // 缓存前缀
+	],
 	/* redis设置 */
-	'redis_host'		=>'127.0.0.1',
-	'redis_port'		=>'6379',
-	'redis_password'	=>'',
-	'redis_select'		=>6,	
+	'redis'=>[
+		'host'        =>'127.0.0.1',
+		'port'        =>'6379',
+		'password'    =>'',
+		'select'      =>6,
+	],
 
 ];

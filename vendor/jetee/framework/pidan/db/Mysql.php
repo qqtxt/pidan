@@ -40,10 +40,10 @@ class Mysql implements Db
 		$this->connect();
 	}
 
-	public static function __make(App $app)
+	public static function __make()
 	{
-		$config=$app->config->get('datebase');
-		return new static(C('DB_HOST'), C('DB_USER'), C('DB_PWD'), C('DB_NAME'), C('DB_PREFIX')));
+		$config=app('config')->get('datebase');
+		return new static($config['db_host'], $config['db_user'], $config['db_pwd'], $config['db_name'], $config['db_prefix']);
 	}
 	/**
 	 * 创建 PDO 实例

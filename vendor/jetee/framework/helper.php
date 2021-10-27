@@ -1,5 +1,6 @@
 <?php
 declare (strict_types = 1);
+
 //把网址wwww.ma863.comj/blog/show/id/1 转换成$_GET参数      app=blog   act=show   id=1
 function dispatcher(){
 	$var=array();
@@ -148,79 +149,6 @@ function response($data = '', $code = 200, $header = [], $type = 'html'): Respon
 	return Response::create($data, $type, $code)->header($header);
 }
 
-
-
-
-/**
- * 是否是AJAx提交的
- * @return bool
- */
-function is_ajax(){
-	return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
-}
-
-/**
- * 是否是GET提交的
- */
-function is_get(){
-	return $_SERVER['REQUEST_METHOD'] == 'GET';
-}
-
-/**
- * 是否是POST提交
- * @return int
- */
-function is_post() {
-	return $_SERVER['REQUEST_METHOD'] == 'POST';
-}
-/**
- * db  读
- * @param string $table  默认空不设置表名 		db('user u')
- * @param string $prefix 表前缀  NULL为没有前缀 ''为加C('DB_PREFIX')
- * @return $connection 数据库连接信息
- */
-function db(){
-	static $db=null;
-	if(!$db){
-		$db = new \pidan\db\Mysql(C('DB_HOST'), C('DB_USER'), C('DB_PWD'), C('DB_NAME'), C('DB_PREFIX'));
-	}
-	return $db;
-}
-/**
- * 获取和设置配置参数 支持批量定义   取值没有返回null   C()获取所有
- * @param string|array $name 配置变量   字条 一级数组 不区分大小写
- * @param mixed $value 配置值
- * @return mixed
- */
-function C($name=null, $value=null,$default=null) {
-	static $_config = array();
-	// 无参数时获取所有
-	if (empty($name)) {
-		return $_config;
-	}
-	// 优先执行设置获取或赋值
-	if (is_string($name)) {
-		$name = strtolower($name);
-		if (!strpos($name, '.')) {
-			if (is_null($value))
-				return isset($_config[$name]) ? $_config[$name] : $default;
-			$_config[$name] = $value;
-			return;
-		}
-		// 二维数组设置和获取支持
-		$name = explode('.', $name);
-		if (is_null($value))
-			return isset($_config[$name[0]][$name[1]]) ? $_config[$name[0]][$name[1]] : $default;
-		$_config[$name[0]][$name[1]] = $value;
-		return;
-	}
-	// 批量设置
-	if (is_array($name)){
-		$_config = array_merge($_config, array_change_key_case($name));
-	   return;
-	}
-	return null; // 避免非法参数
-}
 /**
  * 获取和设置语言定义(区分大小写)
  * @param string|array $name 语言变量
@@ -259,17 +187,18 @@ function L($name=null, $value=null) {
 function redis(){
 	static $redis=NULL;
 	if($redis===NULL){
+		$config=app('config')->get('redis');
 		//无空闲连接，创建新连接
 		$redis = new Redis();
 		do{
-			$res = $redis->pconnect(C('REDIS_HOST'), intval(C('REDIS_PORT')));
+			$res = $redis->pconnect($config['host'], intval($config['port']));
 		}while(!$res);
 
-		if ('' != C('REDIS_PASSWORD')){
-			$redis->auth(C('REDIS_PASSWORD'));
+		if ('' != $config['password']){
+			$redis->auth($config['password']);
 		}
-		if (0 != C('REDIS_SELECT')){
-			$redis->select(C('REDIS_SELECT'));
+		if (0 != $config['select']){
+			$redis->select($config['select']);
 		}		
 	}
 	return $redis;
@@ -282,21 +211,14 @@ function redis(){
  * @return mixed
  */
 function cookie($name, $value='', $option=null) {//$request='',$response为了兼容swoole
-	// 默认设置
-	$config = array(
-		'prefix'    =>  C('COOKIE_PREFIX'), // cookie 名称前缀
-		'expire'    =>  C('COOKIE_EXPIRE'), // cookie 保存时间
-		'path'      =>  C('COOKIE_PATH'), // cookie 保存路径
-		'domain'    =>  C('COOKIE_DOMAIN'), // cookie 有效域名
-		'secure'    =>  C('COOKIE_SECURE'), // cookie 有效域名
-		'httponly'  =>  C('COOKIE_HTTPONLY'), // cookie 有效域名
-	);
+	$config=app()->config->get('cookie');
+	/*/ 默认设置
+	$config = ['prefix','expire','path','domain','secure' ,'httponly']*/
 	// 参数设置(会覆盖黙认设置)
 	if (!is_null($option)) {
 		if (is_numeric($option))
 			$option = array('expire' => $option);
-		elseif (is_string($option))
-			parse_str($option, $option);
+
 		$config     = array_merge($config, array_change_key_case($option));
 	}
 	// 清除指定前缀的所有cookie
@@ -393,7 +315,7 @@ function I($name,$default='',$filter=null,$is_array=false) {
 		$data       =	$input[$name];
 	}
 	if(isset($data)){
-		$filters    =   isset($filter)?$filter:C('DEFAULT_FILTER');
+		$filters    =   isset($filter)?$filter:app('config')->get('app.default_filter');
 		$filters    =   explode(',',$filters);
 		foreach($filters as $filter){
 			$data   =   $is_array && is_array($data) ? array_map($filter,$data): $filter($data); // 参数过滤
@@ -402,73 +324,4 @@ function I($name,$default='',$filter=null,$is_array=false) {
 		$data       =	 isset($default)?$default:NULL;
 	}
 	return $data;
-}
-/**
- * session管理函数
- * @param string $name session名称 
- * @param mixed $value session值
- * @return mixed
- */
-function session($name=false,$value='') {
-	static $session=null;
-	if(!$session) {
-		$session=new pidan\Session(redis(),'cookie',cookie(C('session_options.name')));
-	}
-	if('' === $value){
-		if(0===strpos($name,'?')){ // 检查session  session('?name')
-			$name   =  substr($name,1);
-			return $session->exists($name);
-		}elseif(is_null($name)){ // 清空session    session(null)
-			$session->destroy();
-		}elseif(0===strpos($name,'[')){
-			if('[destroy]'==$name){ // 销毁session   session('[destroy]')
-				$session->destroy();
-			}elseif('[reset]'==$name){// 销毁重置过期时间   session('[reset]')
-				return $session->reset();
-			}
-			return;
-		}else{
-			return $session->get($name?:null);
-		}
-	}elseif(is_null($value)){ // 删除session  session('username',null)
-		return $session->del($name);
-	}else{ // 设置session   session('username','zhang')
-		return $session->set($name,$value);
-	}
-}
-function initCache($options=null){
-	static $cache= [];
-	$type=isset($options['type']) ?$options['type']:C('DATA_CACHE_TYPE');
-	if(empty($cache[$type])) { // 缓存初始化
-		$type=strtolower(trim($type));
-		$class='\pidan\cache\\'.ucwords($type);
-		$options=$options??[];
-		$cache[$type] = new $class($options);
-	}
-	return $cache[$type];
-}
-/**
- * 缓存管理  空闲状态  从初始化到获取值一般0.0015内
- * @param mixed $name 缓存名称，如果为数组表示进行缓存设置
- * @param mixed $value 缓存值
- * @param mixed $options 缓存参数  如果是数字为过期时间秒
- * @return mixed  取值不存在 返回false
- */
-function S($name,$value='',$options=null){
-	$cache=initCache($options);
-	if(''=== $value){//获取缓存
-		app()->N('cache_read',1);
-		return $cache->get($name);
-	}elseif(is_null($value)) {//删除缓存
-		app()->N('cache_write',1);
-		return $cache->rm($name);
-	}else {//缓存数据
-		app()->N('cache_write',1);
-		if(is_array($options)) {
-			$expire     =   isset($options['expire'])?$options['expire']:NULL;
-		}else{
-			$expire     =   is_int($options)?$options:NULL;
-		}
-		return $cache->set($name, $value, $expire);
-	}
 }
