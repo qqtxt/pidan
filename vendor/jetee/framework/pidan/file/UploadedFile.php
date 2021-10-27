@@ -10,10 +10,10 @@
 // +----------------------------------------------------------------------
 declare (strict_types = 1);
 
-namespace think\file;
+namespace pidan\file;
 
-use think\exception\FileException;
-use think\File;
+use RuntimeException;
+use pidan\File;
 
 class UploadedFile extends File
 {
@@ -63,7 +63,7 @@ class UploadedFile extends File
             $moved = move_uploaded_file($this->getPathname(), (string) $target);
             restore_error_handler();
             if (!$moved) {
-                throw new FileException(sprintf('Could not move the file "%s" to "%s" (%s)', $this->getPathname(), $target, strip_tags($error)));
+                throw new RuntimeException(sprintf('Could not move the file "%s" to "%s" (%s)', $this->getPathname(), $target, strip_tags($error)));
             }
 
             @chmod((string) $target, 0666 & ~umask());
@@ -71,7 +71,7 @@ class UploadedFile extends File
             return $target;
         }
 
-        throw new FileException($this->getErrorMessage());
+        throw new RuntimeException($this->getErrorMessage());
     }
 
     /**

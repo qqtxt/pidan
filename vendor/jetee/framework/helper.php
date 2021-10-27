@@ -148,7 +148,31 @@ function response($data = '', $code = 200, $header = [], $type = 'html'): Respon
 {
 	return Response::create($data, $type, $code)->header($header);
 }
-
+/**
+ * Session管理
+ * @param string $name  session名称
+ * @param mixed  $value session值
+ * @return mixed
+ */
+function session($name = '', $value = '')
+{
+	$session=app('session');
+	if (is_null($name)) {
+		// 清除
+		$session->clear();
+	} elseif ('' === $name) {
+		return $session->all();
+	} elseif (is_null($value)) {
+		// 删除
+		$session->delete($name);
+	} elseif ('' === $value) {
+		// 判断或获取
+		return 0 === strpos($name, '?') ? $session->has(substr($name, 1)) : $session->get($name);
+	} else {
+		// 设置
+		$session->set($name, $value);
+	}
+}
 /**
  * 获取和设置语言定义(区分大小写)
  * @param string|array $name 语言变量

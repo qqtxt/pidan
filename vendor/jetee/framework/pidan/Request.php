@@ -12,7 +12,36 @@ use pidan\file\UploadedFile;
  */
 class Request implements ArrayAccess
 {
-	/**
+    /**
+     * 兼容PATH_INFO获取
+     * @var array
+     */
+    protected $pathinfoFetch = ['ORIG_PATH_INFO', 'REDIRECT_PATH_INFO', 'REDIRECT_URL'];
+
+    /**
+     * PATHINFO变量名 用于兼容模式
+     * @var string
+     */
+    protected $varPathinfo = 's';
+
+    /**
+     * 请求类型  post过来时可以指定访问类型  $_POST[_method]=['get', 'post', 'put', 'patch', 'delete']
+     * @var string
+     */
+    protected $varMethod = '_method';
+
+    /**
+     * 表单ajax伪装变量
+     * @var string
+     */
+    protected $varAjax = '_ajax';
+
+    /**
+     * 表单pjax伪装变量
+     * @var string
+     */
+    protected $varPjax = '_pjax';
+    /**
 	 * 域名根
 	 * @var string
 	 */
@@ -127,6 +156,11 @@ class Request implements ArrayAccess
 	 * @var array
 	 */
 	protected $put;
+	 /**
+     * COOKIE数据
+     * @var array
+     */
+    protected $cookie = [];
 	/**
 	 * 当前SERVER参数
 	 * @var array
@@ -143,16 +177,50 @@ class Request implements ArrayAccess
 	 */
 	protected $header = [];
 	/**
+     * 资源类型定义
+     * @var array
+     */
+    protected $mimeType = [
+        'html'  => 'text/html,application/xhtml+xml,*/*',
+        'xml'   => 'application/xml,text/xml,application/x-xml',
+        'json'  => 'application/json,text/x-json,application/jsonrequest,text/json',
+        'js'    => 'text/javascript,application/javascript,application/x-javascript',
+        'css'   => 'text/css',
+        'rss'   => 'application/rss+xml',
+        'yaml'  => 'application/x-yaml,text/yaml',
+        'atom'  => 'application/atom+xml',
+        'pdf'   => 'application/pdf',
+        'text'  => 'text/plain',
+        'image' => 'image/png,image/jpg,image/jpeg,image/pjpeg,image/gif,image/webp,image/*',
+        'csv'   => 'text/csv',
+    ];
+	/**
 	 * 当前请求内容
 	 * @var string
 	 */
 	protected $content;
+    /**
+     * 全局过滤规则
+     * @var array
+     */
+    protected $filter;
 	/**
 	 * php://input内容
 	 * @var string
 	 */
 	// php://input
 	protected $input;
+    /**
+     * 请求安全Key
+     * @var string
+     */
+    protected $secureKey;
+
+    /**
+     * 是否已经合并Param
+     * @var bool
+     */
+    protected $mergeParam = false;
 	/**
 	 * 是否允许请求缓存  未过期的304与redis缓冲
 	 * @var bool
@@ -191,19 +259,20 @@ class Request implements ArrayAccess
 		}
 
 		$request->header = array_change_key_case($header);
-		$request->server = $_SERVER;
+		$request->server = &$_SERVER;
 
 		$inputData = $request->getInputData($request->input);
 
-		$request->get     = $_GET;
-		$request->post    = $_POST ?: $inputData;
+		$request->get     = &$_GET;
+		$request->post    = $_POST ? &$_POST : $inputData;
 		$request->put     = $inputData;
-		$request->request = $_REQUEST;
-		$request->cookie  = $_COOKIE;
-		$request->file    = $_FILES ?? [];
+		$request->request = &$_REQUEST;
+		$request->cookie  = &$_COOKIE;
+		$request->file    = &$_FILES;
 
 		return $request;
 	}
+	//取json与urlencoded
 	protected function getInputData($content): array
 	{
 		$contentType = $this->contentType();
@@ -237,7 +306,7 @@ class Request implements ArrayAccess
 		return '';
 	}
 	/**
-	 * 设置或者获取当前的Header
+	 * 获取当前的Header
 	 * @access public
 	 * @param  string $name header名称
 	 * @param  string $default 默认值
@@ -363,7 +432,7 @@ class Request implements ArrayAccess
 	}
 
 	/**
-	 * 获取当前完整URL 包括QUERY_STRING
+	 * 获取当前完整URL 包括QUERY_STRING  /index.php/index/index/?d=3
 	 * @access public
 	 * @param  bool $complete 是否包含完整域名
 	 * @return string
@@ -400,7 +469,7 @@ class Request implements ArrayAccess
 	}
 
 	/**
-	 * 获取当前URL 不含QUERY_STRING
+	 * 获取当前URL 不含QUERY_STRING   /index/index
 	 * @access public
 	 * @param  bool $complete 是否包含完整域名
 	 * @return string
@@ -416,7 +485,7 @@ class Request implements ArrayAccess
 	}
 
 	/**
-	 * 获取当前执行的文件 SCRIPT_NAME
+	 * 获取当前执行的文件 SCRIPT_NAME  /index.php
 	 * @access public
 	 * @param  bool $complete 是否包含完整域名
 	 * @return string
@@ -458,9 +527,9 @@ class Request implements ArrayAccess
 	}
 
 	/**
-	 * 获取URL访问根地址
+	 * 获取URL访问根地址  /blog   带目录
 	 * @access public
-	 * @param  bool $complete 是否包含完整域名
+	 * @param  bool $complete 是否包含完整域名  http://pinhuo.cc/blog  
 	 * @return string
 	 */
 	public function root(bool $complete = false): string
@@ -477,8 +546,8 @@ class Request implements ArrayAccess
 	}
 
 	/**
-	 * 获取URL访问根目录
-	 * @access public
+	 * 获取URL访问根目录 /blog
+	 * @access public  
 	 * @return string
 	 */
 	public function rootUrl(): string
@@ -517,7 +586,6 @@ class Request implements ArrayAccess
 				// 判断URL里面是否有兼容模式参数
 				$pathinfo = $_GET[$this->varPathinfo];
 				unset($_GET[$this->varPathinfo]);
-				unset($this->get[$this->varPathinfo]);
 			} elseif ($this->server('PATH_INFO')) {
 				$pathinfo = $this->server('PATH_INFO');
 			} elseif (false !== strpos(PHP_SAPI, 'cli')) {
@@ -552,7 +620,7 @@ class Request implements ArrayAccess
 	 */
 	public function ext(): string
 	{
-		return pathinfo($this->pathinfo(), PATHINFO_EXTENSION);
+		return pathinfo($this->baseFile(), PATHINFO_EXTENSION);
 	}
 
 	/**
@@ -743,7 +811,7 @@ class Request implements ArrayAccess
 	/**
 	 * 获取当前请求的参数
 	 * @access public
-	 * @param  string|array $name 变量名
+	 * @param  string|array $name 变量名     可以是数组  ['需要值的键'=>单个过滤函数名,]
 	 * @param  mixed        $default 默认值
 	 * @param  string|array $filter 过滤方法
 	 * @return mixed
@@ -784,7 +852,7 @@ class Request implements ArrayAccess
 	 * 获取包含文件在内的请求参数
 	 * @access public
 	 * @param  string|array $name 变量名
-	 * @param  string|array $filter 过滤方法
+	 * @param  string|array $filter 过滤方法      单个不过滤
 	 * @return mixed
 	 */
 	public function all($name = '', $filter = '')
@@ -857,7 +925,7 @@ class Request implements ArrayAccess
 	 * @access public
 	 * @param  string|array $name 变量名
 	 * @param  mixed        $default 默认值
-	 * @param  string|array $filter 过滤方法
+	 * @param  string|array $filter 过滤方法   可以是正则
 	 * @return mixed
 	 */
 	public function get($name = '', $default = null, $filter = '')
@@ -884,7 +952,7 @@ class Request implements ArrayAccess
 	/**
 	 * 获取POST参数
 	 * @access public
-	 * @param  string|array $name 变量名
+	 * @param  string|array $name 变量名     数组 ['需要值的键'=>单个过滤函数名,]   	字符串 可以逗号分隔，后面强制转换类型 name,pass,code/[a,d,f,b,s]
 	 * @param  mixed        $default 默认值
 	 * @param  string|array $filter 过滤方法
 	 * @return mixed
@@ -960,23 +1028,6 @@ class Request implements ArrayAccess
 		return $this->input($this->request, $name, $default, $filter);
 	}
 
-	/**
-	 * 获取环境变量
-	 * @access public
-	 * @param  string $name 数据名称
-	 * @param  string $default 默认值
-	 * @return mixed
-	 */
-	public function env(string $name = '', string $default = null)
-	{
-		if (empty($name)) {
-			return $this->env->get();
-		} else {
-			$name = strtoupper($name);
-		}
-
-		return $this->env->get($name, $default);
-	}
 
 	/**
 	 * 获取session数据
@@ -1136,7 +1187,7 @@ class Request implements ArrayAccess
 	 * 获取变量 支持过滤和默认值
 	 * @access public
 	 * @param  array        $data 数据源
-	 * @param  string|false $name 字段名
+	 * @param  string|false $name 字段名		可以逗号分隔    name,pass,code/[a,d,f,b,s]
 	 * @param  mixed        $default 默认值
 	 * @param  string|array $filter 过滤函数
 	 * @return mixed
@@ -1176,13 +1227,22 @@ class Request implements ArrayAccess
 		return $data;
 	}
 
-	protected function filterData($data, $filter, $name, $default)
+	/**
+	 * 强制类型转换
+	 * @access protected
+	 * @param  mixed  $data 要过滤的
+	 * @param  string|array $filter 过滤规则 string为,分隔函数
+	 * @param  string $name 键
+	 * @param  string $default 默认值
+	 * @return mixed
+	 */
+	 protected function filterData($data, $filter, $name, $default)
 	{
 		// 解析过滤器
 		$filter = $this->getFilter($filter, $default);
 
 		if (is_array($data)) {
-			array_walk_recursive($data, [$this, 'filterValue'], $filter);
+			array_walk_recursive($data, [$this, 'filterValue'], $filter);//data 参数的值作为第一个，键名作为第二个。
 		} else {
 			$this->filterValue($data, $name, $filter);
 		}
@@ -1261,10 +1321,15 @@ class Request implements ArrayAccess
 		}
 
 		$this->filter = $filter;
-
 		return $this;
 	}
-
+	/**
+	 * 设置或获取当前的过滤规则
+	 * @access public
+	 * @param  string|array $filter 过滤规则 string为,分隔函数
+	 * @param  string $default 默认值     执行时还原
+	 * @return mixed
+	 */               
 	protected function getFilter($filter, $default): array
 	{
 		if (is_null($filter)) {
@@ -1288,7 +1353,7 @@ class Request implements ArrayAccess
 	 * @access public
 	 * @param  mixed $value 键值
 	 * @param  mixed $key 键名
-	 * @param  array $filters 过滤方法+默认值
+	 * @param  array $filters 过滤方法+默认值   可以是正则
 	 * @return mixed
 	 */
 	public function filterValue(&$value, $key, $filters)
@@ -1300,7 +1365,7 @@ class Request implements ArrayAccess
 				// 调用函数或者方法过滤
 				$value = call_user_func($filter, $value);
 			} elseif (is_scalar($value)) {
-				if (is_string($filter) && false !== strpos($filter, '/')) {
+				if (is_string($filter) && false !== strpos($filter, '/')) {//是正则
 					// 正则过滤
 					if (!preg_match($filter, $value)) {
 						// 匹配不成功返回默认值
@@ -1357,7 +1422,7 @@ class Request implements ArrayAccess
 	/**
 	 * 获取指定的参数
 	 * @access public
-	 * @param  array        $name 变量名
+     * @param  array        $name 变量名     ['需要值的键'=>默认值,]
 	 * @param  mixed        $data 数据或者变量类型
 	 * @param  string|array $filter 过滤方法
 	 * @return array
@@ -1974,6 +2039,7 @@ class Request implements ArrayAccess
 	public function withRoute(array $route)
 	{
 		$this->route = $route;
+		$this->mergeParam = false;
 		return $this;
 	}
 

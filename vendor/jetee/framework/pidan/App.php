@@ -74,7 +74,7 @@ class App extends Container
 	 */
 	public function __construct(string $rootPath = '')
 	{
-		$this->G('begin');
+		$this->G('begin',$_SERVER['REQUEST_TIME_FLOAT']);
 		$this->pidanPath   = dirname(__DIR__)  . '/';// /jetee/framework
 		$this->rootPath    = $rootPath ? $rootPath : dirname(dirname(dirname($this->pidanPath))). '/';
 		$this->appPath     = $this->rootPath . 'app' . '/';

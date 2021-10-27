@@ -29,7 +29,7 @@ class CheckRequestCache
 	];
 
 	public function __construct()
-	{	
+	{
 		$route=app('config')->get('route');
 		if($route)$this->config = array_merge($this->config,$route) ;
 	}
@@ -67,7 +67,7 @@ class CheckRequestCache
 				if (strtotime($request->server('HTTP_IF_MODIFIED_SINCE', '')) + $expire > $request->server('REQUEST_TIME')) {
 					// 读取缓存
 					return Response::create()->code(304);
-				} elseif (($hit = S($tag.$key)) !== false) {
+				} elseif (($hit = app('cache')->get($tag.$key)) !== false) {
 					[$content, $header, $when] = $hit;
 					if (null === $expire || $when + $expire > $request->server('REQUEST_TIME')) {
 						return Response::create($content)->header($header);
@@ -84,7 +84,7 @@ class CheckRequestCache
 			$header['Last-Modified'] = gmdate('D, d M Y H:i:s') . ' GMT';
 			$header['Expires']       = gmdate('D, d M Y H:i:s', time() + $expire) . ' GMT';
 
-			S($tag.$key, [$response->getContent(), $header, time()], $expire);
+			app('cache')->set($tag.$key, [$response->getContent(), $header, time()], $expire);
 		}
 
 		return $response;
