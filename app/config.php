@@ -17,18 +17,19 @@ return [
 	],
 	/* Cookie设置 */
     'cookie'=>[
-    	'prefix'         => '', // cookie 名称前缀
-		'expire'         => 0,       		// 有效期
-		'domain'         => '',//defined('COOKIE_DOMAIN') ? COOKIE_DOMAIN :'', // Cookie有效域名
-		'path'           => '/',     // Cookie路径
-		'secure'         => defined('IS_SSL') ?  (IS_SSL ? true : false) :'',     // Cookie路径
-		'httponly'       => true,     // Cookie路径
+    	'prefix'         => '',// cookie 名称前缀
+		'expire'         => 0, // 有效期
+		'domain'         => '',//Cookie有效域名
+		'path'           => '/',// Cookie路径
+		'secure'         => defined('IS_SSL') ?  (IS_SSL ? true : false) :'',
+		'httponly'       => true, 
+		'samesite'		 => 'lax'//防止CSRF攻击和用户追踪
     ],
 	/* SESSION设置 */
     'session'=>[
 		'expire'        => 3600*24, //过期
-		'cookie_name'   => '_s_',	//cookie
-		'prefix'		=> 'se_',   //redis 或其它缓冲前缀
+		'cookie_name'   => 'PHPSESSID1',	//cookie
+		'prefix'		=> 'se_',   //存入redis或其它缓冲的前缀
 		'type'          => 'Redis', // session hander驱动Redis  或空为系统自带
 	],
 

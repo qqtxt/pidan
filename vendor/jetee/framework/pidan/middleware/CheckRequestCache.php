@@ -70,6 +70,7 @@ class CheckRequestCache
 				} elseif (($hit = app('cache')->get($tag.$key)) !== false) {
 					[$content, $header, $when] = $hit;
 					if (null === $expire || $when + $expire > $request->server('REQUEST_TIME')) {
+						ob_end_clean();
 						return Response::create($content)->header($header);
 					}
 				}

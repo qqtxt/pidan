@@ -66,6 +66,7 @@ class App extends Container
 		'db'                  	  => Mysql::class,
 		'cache'                   => Redis::class,
 		'session'                 => Session::class,
+		'cookie'                  => Cookie::class,
 	];
 	/**
 	 * 架构方法
@@ -74,7 +75,7 @@ class App extends Container
 	 */
 	public function __construct(string $rootPath = '')
 	{
-		$this->G('begin',$_SERVER['REQUEST_TIME_FLOAT']);
+		$this->G('AppStart');
 		$this->pidanPath   = dirname(__DIR__)  . '/';// /jetee/framework
 		$this->rootPath    = $rootPath ? $rootPath : dirname(dirname(dirname($this->pidanPath))). '/';
 		$this->appPath     = $this->rootPath . 'app' . '/';

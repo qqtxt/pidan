@@ -132,8 +132,8 @@ class Http
 				$app=isset($_GET['app']) ? $_GET['app'] : 'index';
 				$act=isset($_GET['act']) ? $_GET['act'] : 'index';
 				$app='app\controller\\'.$app;
-				$response=Response::create((new $app($this->app))->$act());
-				//$response=Response::create($this->app->invokeMethod([$app,$act]));
+				//$response=Response::create((new $app($this->app))->$act());
+				$response=Response::create($this->app->invokeMethod([$app,$act]));
 				$this->app->G('controllerEnd');
 				return $response;
 			});

@@ -19,7 +19,7 @@ class Request implements ArrayAccess
     protected $pathinfoFetch = ['ORIG_PATH_INFO', 'REDIRECT_PATH_INFO', 'REDIRECT_URL'];
 
     /**
-     * PATHINFO变量名 用于兼容模式
+     * PATHINFO变量名 用于兼容模式  nginx|apache重写  /index.php?s=/$1
      * @var string
      */
     protected $varPathinfo = 's';
@@ -151,6 +151,11 @@ class Request implements ArrayAccess
 	 * @var array
 	 */
 	protected $request = [];
+    /**
+     * 中间件传递的参数
+     * @var array
+     */
+    protected $middleware = [];
 	/**
 	 * 当前PUT参数
 	 * @var array
@@ -264,7 +269,7 @@ class Request implements ArrayAccess
 		$inputData = $request->getInputData($request->input);
 
 		$request->get     = &$_GET;
-		$request->post    = $_POST ? &$_POST : $inputData;
+		if($_POST) $request->post=&$_POST; else $request->post=$inputData;
 		$request->put     = $inputData;
 		$request->request = &$_REQUEST;
 		$request->cookie  = &$_COOKIE;

@@ -49,7 +49,11 @@ abstract class Response
 	 * @var string
 	 */
 	protected $content = null;
-
+    /**
+     * Cookie对象
+     * @var Cookie
+     */
+    protected $cookie;
 
 	/**
 	 * 初始化
@@ -79,7 +83,6 @@ abstract class Response
 
 		return Container::getInstance()->invokeClass($class, [$data, $code]);
 	}
-
 	/**
 	 * 发送数据到客户端
 	 * @access public
@@ -99,7 +102,9 @@ abstract class Response
 				header($name . (!is_null($val) ? ':' . $val : ''));
 			}
 		}
-
+		if ($this->cookie) {
+			$this->cookie->save();
+		}
 		$this->sendData($data);
 
 		if (function_exists('fastcgi_finish_request') && !app()->isDebug()) {

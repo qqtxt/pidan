@@ -66,12 +66,13 @@ class ShowRuntime
 	private function showTime() {
 		$app=app();
 		// 显示运行时间
-		$app->G('Middleware');
+		$app->G('begin',$_SERVER['REQUEST_TIME_FLOAT']);
+		if(defined('ENTRY'))$app->G('entry',ENTRY);else $app->G('entry',$_SERVER['REQUEST_TIME_FLOAT']);  //入口位置   起点
 		$showTime   =   date('Y-m-d H:i:s').' Process: '.$app->G('begin','Middleware').'s ';
 		if($this->config['SHOW_ADV_TIME']) {
 			$Middleware=(float)$app->G('Http','Middleware')-(float)$app->G('controllerBigin','controllerEnd');
 			// 显示详细运行时间
-			$showTime .= '( initialized:'.$app->G('begin','initialized').'s Http:'.$app->G('initialized','Http').'s Middleware:'.number_format($Middleware,5).'s Controller:'.$app->G('controllerBigin','controllerEnd').'s )';
+			$showTime .= '( '.(defined('ENTRY')?'entry:'.$app->G('begin','entry').'s':'').' composer:'.$app->G('entry','AppStart').'s initialized:'.$app->G('AppStart','initialized').'s Http:'.$app->G('initialized','Http').'s Middleware:'.number_format($Middleware,5).'s Controller:'.$app->G('controllerBigin','controllerEnd').'s )';
 		}
 		if($this->config['SHOW_DB_TIMES'] && $app->N('db_query') ) {
 			// 显示数据库操作次数
