@@ -68,7 +68,7 @@ class ShowRuntime
 		// 显示运行时间
 		$app->G('begin',$_SERVER['REQUEST_TIME_FLOAT']);
 		if(defined('ENTRY'))$app->G('entry',ENTRY);else $app->G('entry',$_SERVER['REQUEST_TIME_FLOAT']);  //入口位置   起点
-		$showTime   =   date('Y-m-d H:i:s').' Process: '.$app->G('begin','Middleware').'s ';
+		$showTime   =   date('Y-m-d H:i:s').' Process: '.$app->G('entry','Middleware').'s ';
 		if($this->config['SHOW_ADV_TIME']) {
 			$Middleware=(float)$app->G('Http','Middleware')-(float)$app->G('controllerBigin','controllerEnd');
 			// 显示详细运行时间
