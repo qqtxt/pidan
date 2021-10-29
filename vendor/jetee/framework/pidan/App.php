@@ -71,6 +71,7 @@ class App extends Container
 		'cache'                   => Redis::class,
 		'session'                 => Session::class,
 		'cookie'                  => Cookie::class,
+        'console'                 => Console::class,
 	];
 	/**
 	 * 架构方法

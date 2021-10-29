@@ -12,6 +12,7 @@ class index
 		return ob_get_clean();
 	}
 	public function index(\pidan\Request $request,App $app){
+		//var_dump(function_exists('apcu_fetch') && filter_var(ini_get('apc.enabled'), FILTER_VALIDATE_BOOLEAN));
 		// print_r($app->cookie->get());
 
 		// $app->cookie->set('kkkkk',1111);
