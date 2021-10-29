@@ -17,7 +17,11 @@ class App extends Container
 	 * @var bool
 	 */
 	protected $appDebug = false;
-
+    /**
+     * 当前应用类库命名空间
+     * @var string
+     */
+    protected $namespace = 'app';
 	/**
 	 * 应用根目录
 	 * @var string
@@ -108,7 +112,27 @@ class App extends Container
 	{
 		return $this->appDebug;
 	}
+    /**
+     * 设置应用命名空间
+     * @access public
+     * @param string $namespace 应用命名空间
+     * @return $this
+     */
+    public function setNamespace(string $namespace)
+    {
+        $this->namespace = $namespace;
+        return $this;
+    }
 
+    /**
+     * 获取应用类库命名空间
+     * @access public
+     * @return string
+     */
+    public function getNamespace(): string
+    {
+        return $this->namespace;
+    }
    /**
 	 * 获取应用根目录
 	 * @access public

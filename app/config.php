@@ -11,9 +11,15 @@ return [
 	],
 	/*应用配置*/
 	'app'=>[
-		'app_debug'             =>true,
-		'default_timezone'      => 'Asia/Shanghai',
-		'default_filter'        => 'trim',//I函数默认过滤
+		'app_debug'         =>true,
+		'default_timezone'  => 'Asia/Shanghai',
+		'default_filter'    => 'trim',//I函数默认过滤
+		'default_app'		=> 'index',
+		'domain_bind'		=> ['huotai.xxx.com'=>'admin','admin'=>'admin'],//最好是入口文件名区分应用，  自动应用有效，安全
+		// 应用映射（自动多应用模式有效）
+		'app_map'          => ['index'=>'index','admin'=>'admin','*'=>'index'],
+		// 禁止URL访问的应用列表（自动多应用模式有效）
+		'deny_app_list'    => [],
 	],
 	/* Cookie设置 */
     'cookie'=>[

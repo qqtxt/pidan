@@ -7,5 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
 	'pidan\\' => array($vendorDir . '/jetee/framework/pidan', $vendorDir . '/jetee/pidan-helper'),
+    'pidan\\app\\' => array($vendorDir . '/jetee/think-multi-app/src'),
     'app\\' => array($baseDir . '/app'),
 );

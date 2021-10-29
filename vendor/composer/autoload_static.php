@@ -10,6 +10,7 @@ class ComposerStaticInit5b958a9890f313993bd760d5685bad3d
         'p' => 
         array (
             'pidan\\' => 6,
+            'pidan\\app\\' => 10,
         ),
         'a' => 
         array (
@@ -18,6 +19,10 @@ class ComposerStaticInit5b958a9890f313993bd760d5685bad3d
     );
 
     public static $prefixDirsPsr4 = array (
+        'pidan\\app\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jetee/pidan-multi-app/src',
+        ),
         'pidan\\' => 
         array (
             0 => __DIR__ . '/../jetee/framework/pidan', 

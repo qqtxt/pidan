@@ -23,7 +23,12 @@ class Http
 	 * @var string
 	 */
 	protected $path;
-
+	
+    /**
+     * 路由路径
+     * @var string
+     */
+    protected $routePath;
 	/**
 	 * 是否绑定应用
 	 * @var bool
@@ -82,7 +87,25 @@ class Http
 	{
 		return $this->path ?: '';
 	}
+    /**
+     * 获取路由目录
+     * @access public
+     * @return string
+     */
+    public function getRoutePath(): string
+    {
+        return $this->routePath;
+    }
 
+    /**
+     * 设置路由目录
+     * @access public
+     * @param string $path 路由定义目录
+     */
+    public function setRoutePath(string $path): void
+    {
+        $this->routePath = $path;
+    }
 	/**
 	 * 设置应用绑定
 	 * @access public
@@ -131,7 +154,7 @@ class Http
 				dispatcher();
 				$app=isset($_GET['app']) ? $_GET['app'] : 'index';
 				$act=isset($_GET['act']) ? $_GET['act'] : 'index';
-				$app='app\controller\\'.$app;
+				$app=$this->app->getNamespace().'\controller\\'.$app;
 				//$response=Response::create((new $app($this->app))->$act());
 				$response=Response::create($this->app->invokeMethod([$app,$act]));
 				$this->app->G('controllerEnd');
