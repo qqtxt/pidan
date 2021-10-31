@@ -42,7 +42,7 @@ class CheckRequestCache
 	 * @param mixed   $cache
 	 * @return Response
 	 */
-	public function handle($request, Closure $next)
+	public function handle(Request $request, Closure $next)
 	{
 		if ($request->isGet()) {
 			$cache=true;
@@ -61,13 +61,14 @@ class CheckRequestCache
 				}
 			}
 			
-			if ($cache) {				
+			if ($cache) {
+				$request->requestCache=true;
 				$key = $this->parseCacheKey($request, $key);
 
 				if (strtotime($request->server('HTTP_IF_MODIFIED_SINCE', '')) + $expire > $request->server('REQUEST_TIME')) {
 					// 读取缓存
 					return Response::create()->code(304);
-				} elseif (($hit = app('cache')->get($tag.$key)) !== false) {
+				} elseif (($hit = app('cache')->get($tag.$key)) !== null) {
 					[$content, $header, $when] = $hit;
 					if (null === $expire || $when + $expire > $request->server('REQUEST_TIME')) {
 						ob_end_clean();

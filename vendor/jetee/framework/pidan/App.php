@@ -4,7 +4,8 @@ declare (strict_types = 1);
 namespace pidan;
 
 use pidan\db\Mysql;
-use pidan\cache\Redis;
+use pidan\helper\Str;
+// use pidan\cache\Redis;
 /**
  * App 基础类
  */
@@ -68,8 +69,7 @@ class App extends Container
 		'middleware'              => Middleware::class,
 		'config'                  => Config::class,
 		'db'                  	  => Mysql::class,
-		'cache'                   => Redis::class,
-		'session'                 => Session::class,
+		'cache'                   => Cache::class,
 		'cookie'                  => Cookie::class,
         'console'                 => Console::class,
 	];
@@ -250,8 +250,8 @@ class App extends Container
 	public function initialize()
 	{
 		$this->initialized = true;
-		$this->config->load($this->appPath.'/config.php');
-		$this->appDebug = $this->config->get('app.app_debug') ? true :false;
+		$this->appDebug = defined('DEBUG') && DEBUG ? true : false;
+		$this->config->setApcuPrefix('conf_')->load($this->appPath.'config.php');
 		ini_set('display_errors', $this->appDebug ? 'On' : 'Off');
 		if (!$this->runningInConsole()) {
 			//重新申请一块比较大的buffer
@@ -283,16 +283,6 @@ class App extends Container
 		date_default_timezone_set($this->config->get('app.default_timezone'));
 
 		$this->bootService();
-
-
-		// dispatcher();
-		// $app=isset($_GET['app']) ? $_GET['app'] : 'index';
-		// $act=isset($_GET['act']) ? $_GET['act'] : 'index';
-		// $app='app\controller\\'.$app;
-		// echo $this->invokeMethod([$app,$act]);
-		//$controller = new $app($act);
-		
-
 		return $this;
 	}
 	/**
@@ -331,6 +321,23 @@ class App extends Container
 			return $value instanceof $name;
 		}, ARRAY_FILTER_USE_BOTH))[0] ?? null;
 	}
+	/**
+     * 解析应用类的类名
+     * @access public
+     * @param string $layer 层名 controller model ...
+     * @param string $name  类名
+     * @return string
+     */
+    public function parseClass(string $layer, string $name): string
+    {
+        $name  = str_replace(['/', '.'], '\\', $name);
+        $array = explode('\\', $name);
+        $class = Str::studly(array_pop($array));
+        $path  = $array ? implode('\\', $array) . '\\' : '';
+
+        return $this->namespace . '\\' . $layer . '\\' . $path . $class;
+    }
+
 	/**
 	 * 设置和获取统计数据
 	 * 使用方法:

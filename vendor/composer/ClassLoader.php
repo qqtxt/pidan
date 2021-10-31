@@ -366,7 +366,7 @@ class ClassLoader
      */
     public function setApcuPrefix($apcuPrefix)
     {
-        $this->apcuPrefix = function_exists('apcu_fetch') && filter_var(ini_get('apc.enabled'), FILTER_VALIDATE_BOOLEAN) ? $apcuPrefix : null;
+        $this->apcuPrefix = ini_get('apc.enabled') && (!defined('DEBUG') || !DEBUG) ? $apcuPrefix : null;
     }
 
     /**
@@ -456,6 +456,7 @@ class ClassLoader
             }
         }
 
+
         $file = $this->findFileWithExtension($class, '.php');
 
         // Search for Hack files if we are running on HHVM
@@ -464,7 +465,7 @@ class ClassLoader
         }
 
         if (null !== $this->apcuPrefix) {
-            apcu_add($this->apcuPrefix.$class, $file);
+            apcu_store($this->apcuPrefix.$class, $file);
         }
 
         if (false === $file) {

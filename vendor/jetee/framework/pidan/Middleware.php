@@ -10,7 +10,7 @@ use Throwable;
 
 /**
  * 中间件管理类
- * @package think
+ * @package pidan
  */
 class Middleware
 {

@@ -34,7 +34,7 @@ class RunServer extends Command
                 'The document root of the application',
                 ''
             )
-            ->setDescription('PHP Built-in Server for ThinkPHP');
+            ->setDescription('PHP Built-in Server for PidanPHP');
     }
 
     public function execute(Input $input, Output $output)
@@ -54,7 +54,7 @@ class RunServer extends Command
             escapeshellarg($root . DIRECTORY_SEPARATOR . 'router.php')
         );
 
-        $output->writeln(sprintf('ThinkPHP Development server is started On <http://%s:%s/>', $host, $port));
+        $output->writeln(sprintf('PidanPHP Development server is started On <http://%s:%s/>', $host, $port));
         $output->writeln(sprintf('You can exit with <info>`CTRL-C`</info>'));
         $output->writeln(sprintf('Document root is: %s', $root));
         passthru($command);

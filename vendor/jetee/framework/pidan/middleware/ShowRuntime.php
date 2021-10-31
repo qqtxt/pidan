@@ -35,7 +35,7 @@ class ShowRuntime
 	 * @param mixed   $cache
 	 * @return Response
 	 */
-	public function handle($request, Closure $next)
+	public function handle(Request $request, Closure $next)
 	{
 		$response = $next($request);
 		//if($request->app->isDebug())return $response;
@@ -45,7 +45,7 @@ class ShowRuntime
 			if(false !== strpos($content,'{__NORUNTIME__}')) {
 				$content   =  str_replace('{__NORUNTIME__}','',$content);
 			}else{
-				 $runtime = $this->showTime();
+				 $runtime = $this->showTime($request);
 				 if(strpos($content,'{__RUNTIME__}')!==false)
 					$content   =  str_replace('{__RUNTIME__}',$runtime,$content);
 				 else
@@ -63,7 +63,7 @@ class ShowRuntime
 	 * @access private
 	 * @return string
 	 */
-	private function showTime() {
+	private function showTime($request) {
 		$app=app();
 		// 显示运行时间
 		$app->G('begin',$_SERVER['REQUEST_TIME_FLOAT']);
@@ -78,9 +78,9 @@ class ShowRuntime
 			// 显示数据库操作次数
 			$showTime .= ' | DB :'.$app->N('db_query').' queries '.$app->N('db_write').' writes ';
 		}
-		if($this->config['SHOW_CACHE_TIMES']) {
+		if($this->config['SHOW_CACHE_TIMES'] && $app->exists('cache')) {
 			// 显示缓存读写次数
-			$showTime .= ' | Cache :'.$app->N('cache_read').' gets '.$app->N('cache_write').' writes ';
+			$showTime .= ' | Cache :'.$app->cache->store()->getReadTimes().' gets '.$app->cache->store()->getWriteTimes().' writes ';
 		}
 		if($this->config['SHOW_USE_MEM']) {
 			// 显示内存开销
@@ -93,7 +93,7 @@ class ShowRuntime
 			$fun  =  get_defined_functions();
 			$showTime .= ' | CallFun:'.count($fun['user']).','.count($fun['internal']);
 		}
-		//$showTime.='|Html static '.(app()->isHtml()?'On':'Off');
+		$showTime.='|Html cache '.($request->requestCache?'On':'Off');
 		$showTime.='|app_debug '.(app()->isDebug()?'On':'Off');
 		return $showTime;
 	}

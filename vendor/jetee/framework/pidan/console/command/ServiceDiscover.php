@@ -12,7 +12,7 @@ class ServiceDiscover extends Command
     public function configure()
     {
         $this->setName('service:discover')
-            ->setDescription('Discover Services for ThinkPHP');
+            ->setDescription('Discover Services for PidanPHP');
     }
 
     public function execute(Input $input, Output $output)
@@ -26,8 +26,8 @@ class ServiceDiscover extends Command
 
             $services = [];
             foreach ($packages as $package) {
-                if (!empty($package['extra']['think']['services'])) {
-                    $services = array_merge($services, (array) $package['extra']['think']['services']);
+                if (!empty($package['extra']['pidan']['services'])) {
+                    $services = array_merge($services, (array) $package['extra']['pidan']['services']);
                 }
             }
 

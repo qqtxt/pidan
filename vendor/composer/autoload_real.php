@@ -28,7 +28,7 @@ class ComposerAutoloaderInit5b958a9890f313993bd760d5685bad3d
 
         $useStaticLoader = PHP_VERSION_ID >= 50600 && !defined('HHVM_VERSION') && (!function_exists('zend_loader_file_encoded') || !zend_loader_file_encoded());
         if ($useStaticLoader) {
-            $loader->setApcuPrefix('co_');
+            $loader->setApcuPrefix('apcu_');
             require __DIR__ . '/autoload_static.php';
             call_user_func(\Composer\Autoload\ComposerStaticInit5b958a9890f313993bd760d5685bad3d::getInitializer($loader));
         } else {

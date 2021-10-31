@@ -11,7 +11,6 @@ return [
 	],
 	/*应用配置*/
 	'app'=>[
-		'app_debug'         =>true,
 		'default_timezone'  => 'Asia/Shanghai',
 		'default_filter'    => 'trim',//I函数默认过滤
 		'default_app'		=> 'index',
@@ -22,35 +21,63 @@ return [
 		'deny_app_list'    => [],
 	],
 	/* Cookie设置 */
-    'cookie'=>[
-    	'prefix'         => '',// cookie 名称前缀
+	'cookie'=>[
+		'prefix'         => '',// cookie 名称前缀
 		'expire'         => 0, // 有效期
 		'domain'         => '',//Cookie有效域名
 		'path'           => '/',// Cookie路径
 		'secure'         => defined('IS_SSL') ?  (IS_SSL ? true : false) :'',
 		'httponly'       => true, 
 		'samesite'		 => 'lax'//防止CSRF攻击和用户追踪
-    ],
+	],
 	/* SESSION设置 */
-    'session'=>[
-		'expire'        => 3600*24, //过期
-		'cookie_name'   => 'PHPSESSID1',	//cookie
-		'prefix'		=> 'se_',   //存入redis或其它缓冲的前缀
-		'type'          => 'Redis', // session hander驱动Redis  或空为系统自带
+	'session'=>[
+		'name'   		=> 'PHPSESSID1',	//cookie
+		'type'          => 'apcu', // session hander驱动redis | apcu
+		'expire'        => 86400, //过期
+		'prefix'		=> 'ses_',   //存入redis或其它缓冲的前缀
 	],
 
-	/* 数据缓存设置与页面缓冲不一样*/
-    'cache'=>[
-		'expire'        => NULL,      // 数据缓存有效期 NULL表示永久缓存
-		'type'          => 'Redis',  // 数据缓存类型,支持:File|Db|Apc|Memcache|Shmop|Sqlite|Xcache|Apachenote|Eaccelerator|Redis	
-		'prefix'        => 'ca_',     // 缓存前缀
+	'cache'=>[
+		'default'    =>    'apcu',
+		'stores'    =>    [
+			// 文件缓存
+			'file' => [
+				// 驱动方式
+				'type'       => 'File',
+				// 缓存保存目录
+				'path'       => '',
+				// 缓存前缀
+				'prefix'     => 'file_',
+				// 缓存有效期 0表示永久缓存
+				'expire'     => 0,
+				// 缓存标签前缀
+				'tag_prefix' => 'tag:',
+				// 序列化机制 例如 ['serialize', 'unserialize']
+				'serialize'  => [],
+			],  
+			// redis缓存
+			'redis'   =>  [
+				'type'   => 'Redis',
+				'host'       => '127.0.0.1',
+				'port'       => 6379,
+				'password'   => '',
+				'select'     => 6,
+				'timeout'    => 0,//既是连接过期时间
+				'expire'     => 0,//默认key过期时间
+				'persistent' => true,
+				'prefix'     => 'redis_',
+				'tag_prefix' => 'tag:',
+				'serialize'  => [],
+			], 
+			'apcu'   =>  [
+				'type'   => 'Apcu',
+				'expire'     => 0,
+				'prefix'     => '',
+			],  
+
+		],
 	],
-	/* redis设置 */
-	'redis'=>[
-		'host'        =>'127.0.0.1',
-		'port'        =>'6379',
-		'password'    =>'',
-		'select'      =>6,
-	],
+
 
 ];

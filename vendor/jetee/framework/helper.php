@@ -211,11 +211,15 @@ function L($name=null, $value=null) {
 function redis(){
 	static $redis=NULL;
 	if($redis===NULL){
-		$config=app('config')->get('redis');
+		$config=app('config')->get('cache.stores.redis');
 		//无空闲连接，创建新连接
 		$redis = new Redis();
 		do{
-			$res = $redis->pconnect($config['host'], intval($config['port']));
+			if ($config['persistent']) {
+				$res=$redis->pconnect($config['host'], (int) $config['port'], (int) $config['timeout'], 'persistent_id_' . $config['select']);
+			} else {
+				$res=$redis->connect($config['host'], (int) $config['port'], (int) $config['timeout']);
+			}
 		}while(!$res);
 
 		if ('' != $config['password']){
@@ -223,7 +227,7 @@ function redis(){
 		}
 		if (0 != $config['select']){
 			$redis->select($config['select']);
-		}		
+		}
 	}
 	return $redis;
 }

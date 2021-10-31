@@ -1,7 +1,7 @@
 <?php
 namespace pidan\console\output\descriptor;
 
-use pidan\Console as ThinkConsole;
+use pidan\Console as PidanConsole;
 use pidan\console\Command;
 
 class Console
@@ -10,7 +10,7 @@ class Console
     const GLOBAL_NAMESPACE = '_global';
 
     /**
-     * @var ThinkConsole
+     * @var PidanConsole
      */
     private $console;
 
@@ -36,10 +36,10 @@ class Console
 
     /**
      * 构造方法
-     * @param ThinkConsole $console
+     * @param PidanConsole $console
      * @param string|null  $namespace
      */
-    public function __construct(ThinkConsole $console, $namespace = null)
+    public function __construct(PidanConsole $console, $namespace = null)
     {
         $this->console   = $console;
         $this->namespace = $namespace;

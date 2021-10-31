@@ -13,7 +13,7 @@ class Version extends Command
     {
         // 指令配置
         $this->setName('version')
-            ->setDescription('show thinkphp framework version');
+            ->setDescription('show pidanphp framework version');
     }
 
     protected function execute(Input $input, Output $output)

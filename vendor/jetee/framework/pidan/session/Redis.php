@@ -1,33 +1,36 @@
 <?php
-namespace pidan;
+namespace pidan\session;
+
 use pidan\App;
 use pidan\Cookie;
+
 /**
  使用redis作session
  $sess=new session();
  $sess->set('key','2');  //要加变量改库  及var $newguest 就可
  $sess->get('key');
  */
-class Session{
+class Redis{
 	//private
-	protected $handler=null;
-	protected $id='';//加$prefix的sid  存入redis  'cookie_name'=>'PHPSESSID1'
-	protected $expire=3600;
+	protected $handler;
+	protected $id='';//加$prefix的sid  存入redis  'name'=>'PHPSESSID1'
+	protected $expire;
 	
 	//如果有sid  读   没有建  如果有cookie sid =read session memery table 
-	public function __construct(string $id) {
-		$this->handler=redis();
+	public function __construct(string $id,int $expire) {
 		$this->id=$id;
+		$this->expire=$expire;
+		$this->handler=redis();
 	}
-	public static function __make(App $app,COOKIE $cookie)
+	public static function __make(App $app,Cookie $cookie)
 	{	
 		//取id
 		$handler=redis();
 		$config=$app->config->get('session');
 		if(PHP_SAPI == 'cli'){
-			$id=$cookie->get($config['cookie_name']);
+			$id=$cookie->get($config['name']);
 		}else{
-			$id=$cookie->get($config['cookie_name']);
+			$id=$cookie->get($config['name']);
 		}
 
 		//如果不存在  创建cookie与session
@@ -42,13 +45,13 @@ class Session{
 			$handler->expire($id,$config['expire']);
 
 			if(PHP_SAPI == 'cli'){
-				$cookie->set($config['cookie_name'],$id,$config['expire']);
+				$cookie->set($config['name'],$id,$config['expire']);
 			}else{
-				$cookie->set($config['cookie_name'],$id,$config['expire']);
+				$cookie->set($config['name'],$id,$config['expire']);
 			}
 		}
 
-		return new static($id);
+		return new static($id,$config['expire']);
 	}
 	/**
 	* 设置或删除key

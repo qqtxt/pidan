@@ -30,11 +30,11 @@ class VendorPublish extends Command
                 //配置
                 $configDir = $this->app->getConfigPath();
 
-                if (!empty($package['extra']['think']['config'])) {
+                if (!empty($package['extra']['pidan']['config'])) {
 
                     $installPath = $this->app->getRootPath() . 'vendor/' . $package['name'] . DIRECTORY_SEPARATOR;
 
-                    foreach ((array) $package['extra']['think']['config'] as $name => $file) {
+                    foreach ((array) $package['extra']['pidan']['config'] as $name => $file) {
 
                         $target = $configDir . $name . '.php';
                         $source = $installPath . $file;

@@ -2,6 +2,7 @@
 declare (strict_types = 1);
 namespace app;
 use pidan\Service;
+use pidan\helper\Str;
 /**
  * 应用服务类
  */
@@ -12,13 +13,14 @@ class AppService extends Service
 	];
     public function register()
     {
-    	echo 'AppService_register<br>';// 服务启动
-
         // 服务注册
+        $app=app();
+    	$type=$app->config->get('session.type');
+        $app->bind('session','pidan\\session\\' . Str::studly($type));
     }
 
     public function boot()
     {
-        echo 'AppService_boot<br>';// 服务启动
+        //echo 'AppService_boot<br>';// 服务启动
     }
 }

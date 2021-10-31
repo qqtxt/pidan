@@ -39,7 +39,7 @@ class LoadLangPack
         if ($this->lang->defaultLangSet() != $langset) {
             // 加载系统语言包
             $this->lang->load([
-                $this->app->getThinkPath() . 'lang' . DIRECTORY_SEPARATOR . $langset . '.php',
+                $this->app->getPidanPath() . 'lang' . DIRECTORY_SEPARATOR . $langset . '.php',
             ]);
 
             $this->app->LoadLangPack($langset);

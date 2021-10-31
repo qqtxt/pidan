@@ -8,7 +8,7 @@ use RuntimeException;
 
 /**
  * 文件上传类
- * @package think
+ * @package pidan
  */
 class File extends SplFileInfo
 {

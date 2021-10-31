@@ -9,6 +9,8 @@ namespace pidan;
  */
 class Config
 {
+	protected $app;
+
 	/**
 	 * 配置参数
 	 * @var array
@@ -27,22 +29,33 @@ class Config
 	 */
 	protected $ext;
 
+	private $apcuPrefix;
+
 	/**
 	 * 构造方法
 	 * @access public
 	 */
-	public function __construct(string $path = null, string $ext = '.php')
+	public function __construct(string $path = null, string $ext = '.php',App $app)
 	{
+		$this->app  = $app;
 		$this->path = $path ?: '';
 		$this->ext  = $ext;
 	}
 
 	public static function __make(App $app)
 	{
-		$path = $app->getBasePath();
-		return new static($path);
+		return new static($app->getBasePath(),'.php',$app);
 	}
-
+	 /**
+	 * APCu prefix 决定是否使用apcu缓冲
+	 *
+	 * @param string|null $apcuPrefix
+	 */
+	public function setApcuPrefix($apcuPrefix)
+	{
+		$this->apcuPrefix = ini_get('apc.enabled') ? $apcuPrefix : null;
+		return $this;
+	}
 	/**
 	 * 加载配置文件（多种格式）
 	 * @access public
@@ -74,26 +87,33 @@ class Config
 	 */
 	protected function parse(string $file, string $name): array
 	{
-		$type   = pathinfo($file, PATHINFO_EXTENSION);
-		$config = [];
-		switch ($type) {
-			case 'php':
-				$config = include $file;
-				break;
-			case 'yml':
-			case 'yaml':
-				if (function_exists('yaml_parse_file')) {
-					$config = yaml_parse_file($file);
-				}
-				break;
-			case 'ini':
-				$config = parse_ini_file($file, true, INI_SCANNER_TYPED) ?: [];
-				break;
-			case 'json':
-				$config = json_decode(file_get_contents($file), true);
-				break;
+		if (null !== $this->apcuPrefix && !$this->app->isDebug()) {
+			$config = apcu_fetch($this->apcuPrefix.$file, $hit);
 		}
-
+		if(!isset($hit) || !$hit){
+			$type   = pathinfo($file, PATHINFO_EXTENSION);
+			$config = [];
+			switch ($type) {
+				case 'php':
+					$config = include $file;
+					break;
+				case 'yml':
+				case 'yaml':
+					if (function_exists('yaml_parse_file')) {
+						$config = yaml_parse_file($file);
+					}
+					break;
+				case 'ini':
+					$config = parse_ini_file($file, true, INI_SCANNER_TYPED) ?: [];
+					break;
+				case 'json':
+					$config = json_decode(file_get_contents($file), true);
+					break;
+			}
+			if (null !== $this->apcuPrefix) {
+				apcu_store($this->apcuPrefix.$file, $config);
+			}
+		}
 		return is_array($config) ? $this->set($config, strtolower($name)) : [];
 	}
 

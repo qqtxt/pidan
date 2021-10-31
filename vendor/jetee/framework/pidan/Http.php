@@ -154,7 +154,8 @@ class Http
 				dispatcher();
 				$app=isset($_GET['app']) ? $_GET['app'] : 'index';
 				$act=isset($_GET['act']) ? $_GET['act'] : 'index';
-				$app=$this->app->getNamespace().'\controller\\'.$app;
+				$app=$this->app->parseClass('controller',$app);
+				//var_dump($this->app->invokeMethod(['app\index\controller\Index',$act]));
 				//$response=Response::create((new $app($this->app))->$act());
 				$response=Response::create($this->app->invokeMethod([$app,$act]));
 				$this->app->G('controllerEnd');
