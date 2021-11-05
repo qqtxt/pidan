@@ -4,7 +4,7 @@ namespace pidan;
 
 use ArrayAccess;
 use pidan\file\UploadedFile;
-// use pidan\route\Rule;
+use pidan\route\Rule;
 
 /**
  * 请求管理类
@@ -151,6 +151,17 @@ class Request implements ArrayAccess
 	 * @var array
 	 */
 	protected $request = [];
+	/**
+     * 当前路由对象
+     * @var Rule
+     */
+    protected $rule;
+
+    /**
+     * 当前ROUTE参数
+     * @var array
+     */
+    protected $route = [];
     /**
      * 中间件传递的参数
      * @var array

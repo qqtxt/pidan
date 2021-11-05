@@ -29,7 +29,7 @@ class Config
 	 */
 	protected $ext;
 
-	private $apcuPrefix;
+	protected $apcuPrefix;
 
 	/**
 	 * 构造方法
@@ -53,7 +53,7 @@ class Config
 	 */
 	public function setApcuPrefix($apcuPrefix)
 	{
-		$this->apcuPrefix = ini_get('apc.enabled') ? $apcuPrefix : null;
+		$this->apcuPrefix = ini_get('apc.enabled') && !$this->app->isDebug() ? $apcuPrefix : null;
 		return $this;
 	}
 	/**
@@ -65,17 +65,25 @@ class Config
 	 */
 	public function load(string $file, string $name = ''): array
 	{
-		if (is_file($file)) {
-			$filename = $file;
-		} elseif (is_file($this->path . $file . $this->ext)) {
-			$filename = $this->path . $file . $this->ext;
+		if (!is_null($this->apcuPrefix)) {
+			$config = apcu_fetch($this->apcuPrefix.$file, $hit);
 		}
+		if(!isset($hit) || !$hit){
+			if (is_file($file)) {
+				$filename = $file;
+			} elseif (is_file($this->path . $file . $this->ext)) {
+				$filename = $this->path . $file . $this->ext;
+			}
+			if (isset($filename)) {
+				$config=$this->parse($filename);
+			}
+			isset($config) && is_array($config) ?'': $config=[];
+			if (!is_null($this->apcuPrefix)) {
+				apcu_store($this->apcuPrefix.$file, $config);
+			}
 
-		if (isset($filename)) {
-			return $this->parse($filename, $name);
 		}
-
-		return $this->config;
+		return $this->set($config, strtolower($name));
 	}
 
 	/**
@@ -85,36 +93,28 @@ class Config
 	 * @param  string $name 一级配置名
 	 * @return array
 	 */
-	protected function parse(string $file, string $name): array
+	protected function parse(string $file): array
 	{
-		if (null !== $this->apcuPrefix && !$this->app->isDebug()) {
-			$config = apcu_fetch($this->apcuPrefix.$file, $hit);
+		$type   = pathinfo($file, PATHINFO_EXTENSION);
+		$config = [];
+		switch ($type) {
+			case 'php':
+				$config = include $file;
+				break;
+			case 'yml':
+			case 'yaml':
+				if (function_exists('yaml_parse_file')) {
+					$config = yaml_parse_file($file);
+				}
+				break;
+			case 'ini':
+				$config = parse_ini_file($file, true, INI_SCANNER_TYPED) ?: [];
+				break;
+			case 'json':
+				$config = json_decode(file_get_contents($file), true);
+				break;
 		}
-		if(!isset($hit) || !$hit){
-			$type   = pathinfo($file, PATHINFO_EXTENSION);
-			$config = [];
-			switch ($type) {
-				case 'php':
-					$config = include $file;
-					break;
-				case 'yml':
-				case 'yaml':
-					if (function_exists('yaml_parse_file')) {
-						$config = yaml_parse_file($file);
-					}
-					break;
-				case 'ini':
-					$config = parse_ini_file($file, true, INI_SCANNER_TYPED) ?: [];
-					break;
-				case 'json':
-					$config = json_decode(file_get_contents($file), true);
-					break;
-			}
-			if (null !== $this->apcuPrefix) {
-				apcu_store($this->apcuPrefix.$file, $config);
-			}
-		}
-		return is_array($config) ? $this->set($config, strtolower($name)) : [];
+		return $config;
 	}
 
 	/**
@@ -192,7 +192,6 @@ class Config
 			} else {
 				$result = $config;
 			}
-
 			$this->config[$name] = $result;
 		} else {
 			$result = $this->config = array_merge($this->config, array_change_key_case($config));

@@ -18,11 +18,11 @@ class App extends Container
 	 * @var bool
 	 */
 	protected $appDebug = false;
-    /**
-     * 当前应用类库命名空间
-     * @var string
-     */
-    protected $namespace = 'app';
+	/**
+	 * 当前应用类库命名空间
+	 * @var string
+	 */
+	protected $namespace = 'app';
 	/**
 	 * 应用根目录
 	 * @var string
@@ -71,7 +71,9 @@ class App extends Container
 		'db'                  	  => Mysql::class,
 		'cache'                   => Cache::class,
 		'cookie'                  => Cookie::class,
-        'console'                 => Console::class,
+		'console'                 => Console::class,
+		'route'                   => Route::class,
+		'lang'                    => Lang::class,
 	];
 	/**
 	 * 架构方法
@@ -113,27 +115,27 @@ class App extends Container
 	{
 		return $this->appDebug;
 	}
-    /**
-     * 设置应用命名空间
-     * @access public
-     * @param string $namespace 应用命名空间
-     * @return $this
-     */
-    public function setNamespace(string $namespace)
-    {
-        $this->namespace = $namespace;
-        return $this;
-    }
+	/**
+	 * 设置应用命名空间
+	 * @access public
+	 * @param string $namespace 应用命名空间
+	 * @return $this
+	 */
+	public function setNamespace(string $namespace)
+	{
+		$this->namespace = $namespace;
+		return $this;
+	}
 
-    /**
-     * 获取应用类库命名空间
-     * @access public
-     * @return string
-     */
-    public function getNamespace(): string
-    {
-        return $this->namespace;
-    }
+	/**
+	 * 获取应用类库命名空间
+	 * @access public
+	 * @return string
+	 */
+	public function getNamespace(): string
+	{
+		return $this->namespace;
+	}
    /**
 	 * 获取应用根目录
 	 * @access public
@@ -276,8 +278,18 @@ class App extends Container
 				$this->register($service);
 			}
 		}
+
 		// 加载应用默认语言包
-		//$this->loadLangPack($langSet);
+		$langSet = $this->lang->defaultLangSet();
+		$this->lang->load($this->pidanPath . 'pidan/lang/'  . $langSet . '.php');
+		// 加载系统语言包
+		$files = glob($this->appPath . 'lang' . DIRECTORY_SEPARATOR . $langSet . '.*');
+		if(!empty($files)) $this->lang->load($files);
+		/* 加载扩展（自定义）语言包*/
+		$list = $this->config->get('lang.extend_list', []);
+		if (isset($list[$langSet])) $this->lang->load($list[$langSet]);
+		
+
 		// 监听AppInit
 		$this->event->trigger('AppInit');
 		date_default_timezone_set($this->config->get('app.default_timezone'));
@@ -285,6 +297,7 @@ class App extends Container
 		$this->bootService();
 		return $this;
 	}
+
 	/**
 	 * 注册服务
 	 * @access public
@@ -322,21 +335,21 @@ class App extends Container
 		}, ARRAY_FILTER_USE_BOTH))[0] ?? null;
 	}
 	/**
-     * 解析应用类的类名
-     * @access public
-     * @param string $layer 层名 controller model ...
-     * @param string $name  类名
-     * @return string
-     */
-    public function parseClass(string $layer, string $name): string
-    {
-        $name  = str_replace(['/', '.'], '\\', $name);
-        $array = explode('\\', $name);
-        $class = Str::studly(array_pop($array));
-        $path  = $array ? implode('\\', $array) . '\\' : '';
+	 * 解析应用类的类名
+	 * @access public
+	 * @param string $layer 层名 controller model ...
+	 * @param string $name  类名
+	 * @return string
+	 */
+	public function parseClass(string $layer, string $name): string
+	{
+		$name  = str_replace(['/', '.'], '\\', $name);
+		$array = explode('\\', $name);
+		$class = Str::studly(array_pop($array));
+		$path  = $array ? implode('\\', $array) . '\\' : '';
 
-        return $this->namespace . '\\' . $layer . '\\' . $path . $class;
-    }
+		return $this->namespace . '\\' . $layer . '\\' . $path . $class;
+	}
 
 	/**
 	 * 设置和获取统计数据
@@ -355,14 +368,14 @@ class App extends Container
 	public function N($key, $step=0,$save=false) {
 		static $_num    = array();
 		if (!isset($_num[$key])) {
-			$_num[$key] = (false !== $save)? S('N_'.$key) :  0;
+			$_num[$key] = (false !== $save)? app('cache')->get('N_'.$key) :  0;
 		}
 		if (empty($step))
 			return $_num[$key];
 		else
 			$_num[$key] = $_num[$key] + (int) $step;
 		if(false !== $save){ // 保存结果
-			S('N_'.$key,$_num[$key],$save);
+			app('cache')->set('N_'.$key,$_num[$key]);
 		}
 	}
 	/**

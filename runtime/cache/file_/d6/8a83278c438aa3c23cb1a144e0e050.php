@@ -1,4 +1,0 @@
-<?php
-//000000003600
- exit();?>
-a:3:{i:0;s:318:"AppService_register<br>AppInit事件<br/>AppService_boot<br>tpl<br>2021-10-31 12:46:36 Process: 0.00185s ( entry:0.00004s composer:0.00013s initialized:0.00036s Http:0.00026s Middleware:0.00095s Controller:0.00015s ) | Cache :1 gets 0 writes  | UseMem:582 kb | LoadFile:35 | CallFun:20,1648|Html cache Off|app_debug On";i:1;a:4:{s:12:"Content-Type";s:24:"text/html; charset=utf-8";s:13:"Cache-Control";s:28:"max-age=3600,must-revalidate";s:13:"Last-Modified";s:29:"Sun, 31 Oct 2021 04:46:36 GMT";s:7:"Expires";s:29:"Sun, 31 Oct 2021 05:46:36 GMT";}i:2;i:1635655596;}

@@ -1,4 +1,19 @@
-<?php
+<?php echo 1111111;
+/*
+$a=[0=>1,1=>[1,2,3]];
+$b=[1=>[4=>4],4=>4,5=>5,6=>6];
+$c=$a+$b;
+print_r($c);
+
+
+
+$start=microtime(true);
+$i=0;
+while($i++<100)
+@file_get_contents('./'.$i.'.txt');
+echo "\n".number_format(microtime(true)-$start,9);
+
+
 apcu_store('id', [],8888);
 var_dump(apcu_fetch('id'));exit;
 
@@ -29,7 +44,6 @@ echo '<br>'.number_format(microtime(true)-ENTRY,9);
 
 
 
-/*
 
 namespace pidan;
 define('DEBUG',true);//为了规范程序不建议用它    程序内都用app->isDebug

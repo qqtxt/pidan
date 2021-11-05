@@ -16,8 +16,8 @@ class Service extends BaseService
         //     'clear' => command\Clear::class,
         // ]);
 
-        // $this->app->bind([
-        //     'pidan\route\Url' => Url::class,
-        // ]);
+        $this->app->bind([
+            'pidan\route\Url' => Url::class,
+        ]);
     }
 }

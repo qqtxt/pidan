@@ -191,6 +191,21 @@ class Container implements ArrayAccess,  Countable
             unset($this->instances[$name]);
         }
     }
+    /**
+     * 调用反射执行类的方法 支持参数绑定
+     * @access public
+     * @param object $instance 对象实例
+     * @param mixed  $reflect  反射类
+     * @param array  $vars     参数
+     * @return mixed
+     */
+    public function invokeReflectMethod($instance, $reflect, array $vars = [])
+    {
+        $args = $this->bindParams($reflect, $vars);
+
+        return $reflect->invokeArgs($instance, $args);
+    }
+
 	/**
 	 * 调用反射执行callable 支持参数绑定
 	 * @access public

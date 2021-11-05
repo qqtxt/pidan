@@ -63,6 +63,17 @@ function invoke($call, array $args = [])
 	return pidan\Container::getInstance()->invokeClass($call, $args);
 }
 /**
+ * 获取语言变量值
+ * @param string $name 语言变量名
+ * @param array  $vars 动态变量值
+ * @param string $lang 语言
+ * @return mixed
+ */
+function lang(string $name, array $vars = [], string $range = '')
+{
+    return app('lang')->get($name, $vars, $range);
+}
+/**
  * 获取当前应用目录
  *
  * @param string $path

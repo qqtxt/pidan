@@ -19,16 +19,16 @@ class Http
 	protected $name;
 
 	/**
-	 * 应用路径
+	 * 应用路径   只作设置app->appPath用在multiApp中
 	 * @var string
 	 */
 	protected $path;
 	
-    /**
-     * 路由路径
-     * @var string
-     */
-    protected $routePath;
+	/**
+	 * 路由路径
+	 * @var string
+	 */
+	protected $routePath;
 	/**
 	 * 是否绑定应用
 	 * @var bool
@@ -87,25 +87,25 @@ class Http
 	{
 		return $this->path ?: '';
 	}
-    /**
-     * 获取路由目录
-     * @access public
-     * @return string
-     */
-    public function getRoutePath(): string
-    {
-        return $this->routePath;
-    }
+	/**
+	 * 获取路由目录
+	 * @access public
+	 * @return string
+	 */
+	public function getRoutePath(): string
+	{
+		return $this->routePath;
+	}
 
-    /**
-     * 设置路由目录
-     * @access public
-     * @param string $path 路由定义目录
-     */
-    public function setRoutePath(string $path): void
-    {
-        $this->routePath = $path;
-    }
+	/**
+	 * 设置路由目录
+	 * @access public
+	 * @param string $path 路由定义目录
+	 */
+	public function setRoutePath(string $path): void
+	{
+		$this->routePath = $path;
+	}
 	/**
 	 * 设置应用绑定
 	 * @access public
@@ -136,6 +136,7 @@ class Http
 	 */
 	public function run(): Response
 	{
+		$this->app->G('Http');
 		//自动创建request对象
 		$request = $this->app->make('request');
 		// 加载全局中间件
@@ -145,11 +146,10 @@ class Http
 
 		// 监听HttpRun
 		$this->app->event->trigger('HttpRun');
-		$this->app->G('Http');
 		//https://www.ma863.com/blog/show/id/220.html  分解
 		return $this->app->middleware->pipeline()
 			->send($request)
-			->then(function ($request) {
+			/*->then(function ($request) {
 				$this->app->G('controllerBigin');
 				dispatcher();
 				$app=isset($_GET['app']) ? $_GET['app'] : 'index';
@@ -160,12 +160,24 @@ class Http
 				$response=Response::create($this->app->invokeMethod([$app,$act]));
 				$this->app->G('controllerEnd');
 				return $response;
+			});*/
+			->then(function ($request) {
+
+				$this->app->G('controllerBigin');
+				$withRoute = app('config')->get('app.with_route', true) ? function () {
+					//加载路由
+					$files = glob($this->routePath . '*.php');
+					foreach ($files as $file) {
+						include $file;
+					}
+					app('event')->trigger(RouteLoaded::class);
+				} : null;
+				$response=app('route')->dispatch($request, $withRoute);
+				$this->app->G('controllerEnd');
+				
+				return $response;			
 			});
 	}
-
-
-
-
 
 	/**
 	 * HttpEnd

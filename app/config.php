@@ -14,11 +14,13 @@ return [
 		'default_timezone'  => 'Asia/Shanghai',
 		'default_filter'    => 'trim',//I函数默认过滤
 		'default_app'		=> 'index',
-		'domain_bind'		=> ['huotai.xxx.com'=>'admin','admin'=>'admin'],//最好是入口文件名区分应用，  自动应用有效，安全
+		'domain_bind'		=> [],//['huotai.xxx.com'=>'admin','admin'=>'admin'],//最好是入口文件名区分应用，  自动应用有效，安全
 		// 应用映射（自动多应用模式有效）
 		'app_map'          => ['index'=>'index','admin'=>'admin','*'=>'index'],
 		// 禁止URL访问的应用列表（自动多应用模式有效）
 		'deny_app_list'    => [],
+		//开启路由
+		'with_route'	  =>false,
 	],
 	/* Cookie设置 */
 	'cookie'=>[
@@ -37,7 +39,39 @@ return [
 		'expire'        => 86400, //过期
 		'prefix'		=> 'ses_',   //存入redis或其它缓冲的前缀
 	],
-
+	'route'=>[
+		// 是否开启请求缓存 true自动缓存 支持设置请求缓存规则
+		'request_cache_key'     => true,
+		// 请求缓存有效期
+		'request_cache_expire'  => 60,
+		
+		// 默认JSONP格式返回的处理方法
+		'default_jsonp_handler' => 'jsonpReturn',
+		// 默认JSONP处理方法
+		'var_jsonp_handler'     => 'callback',
+	],
+	'lang'=>[
+		// 默认语言
+		'default_lang'    => 'zh-cn',
+		// 允许的语言列表
+		'allow_lang_list' => [],
+		// 多语言自动侦测变量名
+		'detect_var'      => 'lang',
+		// 是否使用Cookie记录
+		'use_cookie'      => true,
+		// 多语言cookie变量
+		'cookie_var'      => 'pidan_lang',
+		// 多语言header变量
+		'header_var'      => 'pidan-lang',
+		// 扩展语言包
+		'extend_list'     => [],
+		// Accept-Language转义为对应语言包名称
+		'accept_language' => [
+			'zh-hans-cn' => 'zh-cn',
+		],
+		// 是否支持语言分组
+		'allow_group'     => false,
+	],
 	'cache'=>[
 		'default'    =>    'apcu',
 		'stores'    =>    [
