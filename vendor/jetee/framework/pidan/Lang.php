@@ -48,8 +48,11 @@ class Lang
 	 */
 	private $range = 'zh-cn';
 
-	protected $apcuPrefix;
-
+    /**
+     * apcu缓冲前缀    不为null开启缓冲
+     * @var string
+     */
+    protected $apcuPrefix;
 
 	/**
 	 * 构造方法
@@ -60,7 +63,7 @@ class Lang
 	{
 		$this->config = array_merge($this->config, array_change_key_case($config));
 		$this->range  = $this->config['default_lang'];
-		$this->setApcuPrefix('land_');
+		$this->setApcuPrefix('lang_');
 	}
 
 	public static function __make(Config $config)
@@ -85,7 +88,7 @@ class Lang
 	 */
 	public function setApcuPrefix($apcuPrefix)
 	{
-		$this->apcuPrefix = ini_get('apc.enabled') && app()->isDebug() ? $apcuPrefix : null;
+        $this->apcuPrefix = ini_get('apc.enabled') && defined('APCU_PREFIX') ? APCU_PREFIX.$apcuPrefix : null;
 		return $this;
 	}
 	/**
@@ -126,7 +129,7 @@ class Lang
 
 		foreach ((array) $file as $name) {
 			$result = $this->parse($name);
-			$lang   = array_change_key_case($result) + $lang;
+			$lang   =$result + $lang;
 		}
 
 		if (!empty($lang)) {
@@ -172,10 +175,10 @@ class Lang
 
 					break;
 			}
-			$result=isset($result) && is_array($result) ? $result : [];
+			$result=isset($result) && is_array($result) ? array_change_key_case($result) : [];
 			if (!is_null($this->apcuPrefix)) {
-				apcu_store($this->apcuPrefix.$file, $result);
-			}			
+				apcu_store($this->apcuPrefix.$file,  $result);
+			}
 		}
 
 		return $result;

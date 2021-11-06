@@ -29,7 +29,11 @@ class Config
 	 */
 	protected $ext;
 
-	protected $apcuPrefix;
+    /**
+     * apcu缓冲前缀    不为null开启缓冲
+     * @var string
+     */
+    protected $apcuPrefix;
 
 	/**
 	 * 构造方法
@@ -40,6 +44,7 @@ class Config
 		$this->app  = $app;
 		$this->path = $path ?: '';
 		$this->ext  = $ext;
+		$this->setApcuPrefix('conf_');
 	}
 
 	public static function __make(App $app)
@@ -53,7 +58,7 @@ class Config
 	 */
 	public function setApcuPrefix($apcuPrefix)
 	{
-		$this->apcuPrefix = ini_get('apc.enabled') && !$this->app->isDebug() ? $apcuPrefix : null;
+        $this->apcuPrefix = ini_get('apc.enabled') && defined('APCU_PREFIX') ? APCU_PREFIX.$apcuPrefix : null;
 		return $this;
 	}
 	/**
@@ -74,14 +79,10 @@ class Config
 			} elseif (is_file($this->path . $file . $this->ext)) {
 				$filename = $this->path . $file . $this->ext;
 			}
-			if (isset($filename)) {
-				$config=$this->parse($filename);
-			}
-			isset($config) && is_array($config) ?'': $config=[];
+			$config=isset($filename) ? $this->parse($filename) :[];
 			if (!is_null($this->apcuPrefix)) {
 				apcu_store($this->apcuPrefix.$file, $config);
 			}
-
 		}
 		return $this->set($config, strtolower($name));
 	}
@@ -114,7 +115,7 @@ class Config
 				$config = json_decode(file_get_contents($file), true);
 				break;
 		}
-		return $config;
+		return isset($config) && is_array($config) ?$config: [];
 	}
 
 	/**

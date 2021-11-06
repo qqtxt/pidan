@@ -106,6 +106,7 @@ class ClassLoader
     public function __construct($vendorDir = null)
     {
         $this->vendorDir = $vendorDir;
+		$this->setApcuPrefix('apcu_');
     }
 
     /**
@@ -366,7 +367,7 @@ class ClassLoader
      */
     public function setApcuPrefix($apcuPrefix)
     {
-        $this->apcuPrefix = ini_get('apc.enabled') && (!defined('DEBUG') || !DEBUG) ? $apcuPrefix : null;
+        $this->apcuPrefix = ini_get('apc.enabled') && defined('APCU_PREFIX') ? APCU_PREFIX.$apcuPrefix : null;
     }
 
     /**

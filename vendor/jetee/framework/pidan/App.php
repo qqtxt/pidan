@@ -253,7 +253,7 @@ class App extends Container
 	{
 		$this->initialized = true;
 		$this->appDebug = defined('DEBUG') && DEBUG ? true : false;
-		$this->config->setApcuPrefix('conf_')->load($this->appPath.'config.php');
+		$this->config->load($this->appPath.'config.php');
 		ini_set('display_errors', $this->appDebug ? 'On' : 'Off');
 		if (!$this->runningInConsole()) {
 			//重新申请一块比较大的buffer
