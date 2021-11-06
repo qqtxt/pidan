@@ -12,17 +12,17 @@ use pidan\route\Rule;
  */
 class Url extends Controller
 {
-
     public function __construct(Request $request, Rule $rule, $dispatch)
     {
         $this->request = $request;
         $this->rule    = $rule;
-        // 解析默认的URL规则  'index/index/index' =>     ''=>[null,null]
+
+        // 解析默认的URL规则  'index/index' =>     ''=>[null,null]
         $dispatch = $this->parseUrl($dispatch);
 
         parent::__construct($request, $rule, $dispatch, $this->param);
     }
-
+    
     /**
      * 解析URL地址
      * @access protected
@@ -31,8 +31,8 @@ class Url extends Controller
      */
     protected function parseUrl(string $url): array
     {
-        $depr = $this->rule->config('pathinfo_depr');
-        $bind = $this->rule->getRouter()->getDomainBind();
+        $depr = $this->rule->config('pathinfo_depr');//  路径分隔符  一般是 /
+        $bind = $this->rule->getRouter()->getDomainBind();// 取域名绑定
 
         if ($bind && preg_match('/^[a-z]/is', $bind)) {
             $bind = str_replace('/', $depr, $bind);
@@ -81,28 +81,5 @@ class Url extends Controller
 
         return $route;
     }
-
-    /**
-     * 检查URL是否已经定义过路由
-     * @access protected
-     * @param  array $route 路由信息
-     * @return bool
-     */
-    protected function hasDefinedRoute(array $route): bool
-    {
-        [$controller, $action] = $route;
-
-        // 检查地址是否被定义过路由
-        $name = strtolower(Str::studly($controller) . '/' . $action);
-
-        $host   = $this->request->host(true);
-        $method = $this->request->method();
-
-        if ($this->rule->getRouter()->getName($name, $host, $method)) {
-            return true;
-        }
-
-        return false;
-    }
-
+    
 }

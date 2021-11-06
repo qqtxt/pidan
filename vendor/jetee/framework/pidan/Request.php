@@ -392,7 +392,7 @@ class Request implements ArrayAccess
 	}
 
 	/**
-	 * 获取当前子域名
+	 * 获取当前子域名  去掉pinhuo.cc根域名后的子域名   a.b.c.pinhuo.cc =>a.b.c
 	 * @access public
 	 * @return string
 	 */

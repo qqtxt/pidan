@@ -80,10 +80,11 @@ class MultiApp
 	protected function parseMultiApp(): bool
 	{
 		$defaultApp = $this->app->config->get('app.default_app') ?: 'index';
-
+		//app('http')->name('应用')指定了应用   或通过入口文件名指定
 		if ($this->name || ( ($scriptName = $this->getScriptName()) && !in_array($scriptName, ['index', 'router', 'pidan']))) {
 			$appName = $this->name ?: $scriptName;
 			$this->app->http->setBind();
+		//没指定再识别
 		} else {
 			// 自动多应用识别
 			$this->app->http->setBind(false);
@@ -91,46 +92,51 @@ class MultiApp
 			$this->appName = '';
 
 			$bind = $this->app->config->get('app.domain_bind', []);
-
+			//通过域名绑定识别
 			if (!empty($bind)) {
 				// 获取当前子域名
 				$subDomain = $this->app->request->subDomain();
 				$domain    = $this->app->request->host(true);
 
-				if (isset($bind[$domain])) {
+				if (isset($bind[$domain])) {//完整域名
 					$appName = $bind[$domain];
 					$this->app->http->setBind();
-				} elseif (isset($bind[$subDomain])) {
+				} elseif (isset($bind[$subDomain])) {//子域名 a.b.c.com   中a.b
 					$appName = $bind[$subDomain];
 					$this->app->http->setBind();
-				} elseif (isset($bind['*'])) {
+				} elseif (isset($bind['*'])) {//泛域名
 					$appName = $bind['*'];
 					$this->app->http->setBind();
 				}
 			}
-
+			
+			//域名没绑定   再通过映射识别
 			if (!$this->app->http->isBind()) {
-				$path = $this->app->request->pathinfo();
+				$path = $this->app->request->pathinfo();// index/blog/index
 				$map  = $this->app->config->get('app.app_map', []);//允许的app app_map=>['huotai'=>admin,*=>home,...]   或 ['admin','blog',...] 
 				$deny = $this->app->config->get('app.deny_app_list', []);
-				$name = current(explode('/', $path));
+				$name = current(explode('/', $path));//取根路径
 
 				if (strpos($name, '.')) {
 					$name = strstr($name, '.', true);
 				}
-
-				if (isset($map[$name])) {//映射中有 映射这格式 [‘index’=>'index','admin'=>'admin',]
+				
+				//映射中有 映射这格式[访问到的=>实际应用] [‘home’=>'index','huotai'=>'admin',]
+				if (isset($map[$name])) {
+					//通过匿名函数取实际访问的应用
 					if ($map[$name] instanceof Closure) {
 						$result  = call_user_func_array($map[$name], [$this->app]);
 						$appName = $result ?: $name;
 					} else {
 						$appName = $map[$name];
 					}
+				// 从url中取到了name,map格式为['admin','blog',...]中不存在的与禁止的应用    报错，最好入口文件指定应用，其次通过域名指定
 				} elseif ($name && (false===array_search($name, $map) || in_array($name, $deny))) {//map与deny是这格式   ['index','admin','blog']
 					throw new RuntimeException('app not exists:' . $name);
 				} elseif ($name && isset($map['*'])) {
 					$appName = $map['*'];
-				} else {//没有路径 /blog/article/show
+				//没取到name或map格式为['admin','blog',...]  通过域名访问就没有pathinfo
+				} else {
 					$appName = $name ?: $defaultApp;
 					$appPath = $this->path ?: $this->app->getBasePath() . $appName . DIRECTORY_SEPARATOR;
 
@@ -144,7 +150,7 @@ class MultiApp
 						}
 					}
 				}
-
+				//大约118行  根据访问路径pathinfo取到  设置url的root,  pathinfo去除name只保留   控制器与方法      
 				if ($name) {
 					$this->app->request->setRoot('/' . $name);
 					$this->app->request->setPathinfo(strpos($path, '/') ? ltrim(strstr($path, '/'), '/') : '');
