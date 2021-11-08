@@ -76,7 +76,7 @@ abstract class Dispatch
 
 			return Response::create('', 'html', 204)->header(['Allow' => implode(', ', $allow)]);
 		}
-
+exit('1111111111');
 		$data = $this->exec();
 		return $this->autoResponse($data);
 	}

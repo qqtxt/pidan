@@ -29,7 +29,13 @@ abstract class Rule
      * @var Route
      */
     protected $router;
-    
+
+    /**
+     * 路由所属分组
+     * @var RuleGroup
+     */
+    protected $parent;
+
     /**
      * 路由规则
      * @var mixed
@@ -54,6 +60,37 @@ abstract class Rule
         $this->option[$name] = $value;
 
         return $this;
+    }
+
+    /**
+     * 获取路由参数定义
+     * @access public
+     * @param  string $name 参数名
+     * @param  mixed  $default 默认值
+     * @return mixed
+     */
+    public function getOption(string $name = '', $default = null)
+    {
+        $option = $this->option;
+
+        if ($this->parent) {
+            $parentOption = $this->parent->getOption();
+
+            // 合并分组参数
+            foreach ($this->mergeOptions as $item) {
+                if (isset($parentOption[$item]) && isset($option[$item])) {
+                    $option[$item] = array_merge($parentOption[$item], $option[$item]);
+                }
+            }
+
+            $option = array_merge($parentOption, $option);
+        }
+
+        if ('' === $name) {
+            return $option;
+        }
+
+        return $option[$name] ?? $default;
     }
 
     /**
@@ -88,5 +125,29 @@ abstract class Rule
     {
         return $this->setOption('remove_slash', $remove);
     }
-   
+ 
+     /**
+     * 解析URL的pathinfo参数
+     * @access public
+     * @param  string $url URL地址
+     * @return array
+     */
+    public function parseUrlPath(string $url): array
+    {
+        // 分隔符替换 确保路由定义使用统一的分隔符
+        $url = str_replace('|', '/', $url);
+        $url = trim($url, '/');
+
+        if (strpos($url, '/')) {
+            // [控制器/操作]
+            $path = explode('/', $url);
+        } else {
+            $path = [$url];
+        }
+
+        return $path;
+    }
+ 
+ 
+ 
 }

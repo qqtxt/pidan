@@ -81,11 +81,14 @@ class Route
 	 */
 	protected $domains = [];
 	
+	
 	public function __construct(App $app)
 	{
 		$this->app      = $app;
-		$this->ruleName = new RuleName();
-		$this->setDefaultDomain();	
+		
+		$this->ruleName = new RuleName();		
+		
+		$this->group = $this->domains['-'] = new Domain($this);// 注册默认域名
 
 		$this->config = array_merge($this->config, $this->app->config->get('route'));
 	}
@@ -124,22 +127,6 @@ class Route
 		return $this;
 	}
 	
-	/**
-	 * 初始化默认域名
-	 * @access protected
-	 * @return void
-	 */
-	protected function setDefaultDomain(): void
-	{
-		// 注册默认域名
-		$domain = new Domain($this);
-
-		$this->domains['-'] = $domain;
-
-		// 默认分组
-		$this->group = $domain;
-	}
-
 	/**
 	 * 读取路由绑定
 	 * @access public
@@ -197,7 +184,7 @@ class Route
 		} else {
 			$dispatch = $this->url($this->path());
 		}
-
+		//主要获取控制器 操作名，会存入$request对象中
 		$dispatch->init($this->app);
 
 		return $this->app->middleware->pipeline('route')

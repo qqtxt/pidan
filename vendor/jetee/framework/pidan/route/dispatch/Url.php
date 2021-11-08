@@ -17,30 +17,32 @@ class Url extends Controller
         $this->request = $request;
         $this->rule    = $rule;
 
-        // 解析默认的URL规则  'index/index' =>     ''=>[null,null]
+        // 解析控制器操作,其它参数存入$this->param
         $dispatch = $this->parseUrl($dispatch);
 
         parent::__construct($request, $rule, $dispatch, $this->param);
     }
     
     /**
-     * 解析URL地址
+     * 解析控制器操作,其它参数存入$this->param 
      * @access protected
      * @param  string $url URL
-     * @return array
+     * @return array  [$controller, $action]
      */
     protected function parseUrl(string $url): array
     {
         $depr = $this->rule->config('pathinfo_depr');//  路径分隔符  一般是 /
-        $bind = $this->rule->getRouter()->getDomainBind();// 取域名绑定
+        if($with_route=config('app.with_route')){
+			$bind = $this->rule->getRouter()->getDomainBind();// 取域名绑定
 
-        if ($bind && preg_match('/^[a-z]/is', $bind)) {
-            $bind = str_replace('/', $depr, $bind);
-            // 如果有域名绑定
-            $url = $bind . ('.' != substr($bind, -1) ? $depr : '') . ltrim($url, $depr);
+			if ($bind && preg_match('/^[a-z]/is', $bind)) {
+				$bind = str_replace('/', $depr, $bind);
+				// 如果有域名绑定
+				$url = $bind . ('.' != substr($bind, -1) ? $depr : '') . ltrim($url, $depr);
+			}
         }
 
-        $path = $this->rule->parseUrlPath($url);
+        $path = $this->rule->parseUrlPath($url);//返回[控制器,操作,其他参数]
         if (empty($path)) {
             return [null, null];
         }
@@ -75,7 +77,7 @@ class Url extends Controller
         // 封装路由
         $route = [$controller, $action];
 
-        if ($this->hasDefinedRoute($route)) {
+        if ($with_route && $this->hasDefinedRoute($route)) {
             throw new \RuntimeException('invalid request:' . str_replace('|', $depr, $url));
         }
 
