@@ -86,7 +86,8 @@ class Route
 	{
 		$this->app      = $app;
 		
-		$this->ruleName = new RuleName();		
+		if(config('app.with_route', true))
+			$this->ruleName = new RuleName();
 		
 		$this->group = $this->domains['-'] = new Domain($this);// 注册默认域名
 

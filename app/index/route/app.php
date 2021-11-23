@@ -7,4 +7,4 @@ Route::get('think', function () {
 
 Route::get('hello/:name', 'index/hello');
 
-Route::domain('blog', '@blog');
+Route::get('index/index', 'blog/index');

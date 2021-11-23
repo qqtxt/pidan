@@ -162,13 +162,13 @@ class Http
 			->then(function ($request) {
 
 				$this->app->G('controllerBigin');
-				$withRoute = app('config')->get('app.with_route', true) ? function () {
+				$withRoute = config('app.with_route', true) ? function () {
 					//加载路由
 					$files = glob($this->routePath . '*.php');
 					foreach ($files as $file) {
 						include $file;
 					}
-					app('event')->trigger(RouteLoaded::class);
+					event(RouteLoaded::class);
 				} : null;
 				$response=app('route')->dispatch($request, $withRoute);
 				$this->app->G('controllerEnd');

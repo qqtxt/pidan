@@ -1,9 +1,8 @@
 <?php
 namespace app\index\controller;
 
-use app\BaseController;
 
-class Blog extends BaseController
+class Blog
 {
     public function index(){
        // print_r(apcu_cache_info());

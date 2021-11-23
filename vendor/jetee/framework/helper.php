@@ -64,7 +64,7 @@ function config($name = '', $value = null)
  */
 function event($event, $args = null)
 {
-	return pidan\Container::getInstance()->event->trigger($event, $args);
+	return pidan\Container::getInstance()->make('event')->trigger($event, $args);
 }
 
 /**

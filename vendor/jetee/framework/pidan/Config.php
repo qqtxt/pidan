@@ -58,7 +58,7 @@ class Config
 	 */
 	public function setApcuPrefix($apcuPrefix)
 	{
-        $this->apcuPrefix = ini_get('apc.enabled') && defined('APCU_PREFIX') ? APCU_PREFIX.$apcuPrefix : null;
+        $this->apcuPrefix = ini_get('apc.enabled') && defined('APCU_PREFIX') ? APCU_PREFIX.$apcuPrefix : null;
 		return $this;
 	}
 	/**

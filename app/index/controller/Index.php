@@ -13,16 +13,16 @@ class Index
 		return ob_get_clean();
 	}
 	public function index(Request $request,App $app){
-		// print_r($app->cookie->get());
-
-		$app->cookie->set('kkkkk',1111);
-		// event('UserLogin');
-		$cache=app('cache');
-		 $cache->set('test','cache_reids<br>');
-		echo $cache->get('test');
-		$session=$app->session;
-		$session->set('test','session_test<br>');
-		echo $session->get('test');
+// 		print_r($app->cookie->get());
+// 
+// 		$app->cookie->set('kkkkk',1111);
+// 		event('UserLogin');
+// 		$cache=app('cache');
+// 		 $cache->set('test','cache_reids<br>');
+// 		echo $cache->get('test');
+// 		$session=$app->session;
+// 		$session->set('test','session_test<br>');
+// 		echo $session->get('test');
 		// $db=app('db');
 		// $rows=$db->column('SELECT phone FROM `{#je_#}user` WHERE phone_switch=:phone_switch',array('phone_switch'=>0));
 		// print_r($rows);
