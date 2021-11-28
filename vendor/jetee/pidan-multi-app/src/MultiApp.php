@@ -64,16 +64,6 @@ class MultiApp
 	}
 
 	/**
-	 * 获取路由目录
-	 * @access protected
-	 * @return string
-	 */
-	protected function getRoutePath(): string
-	{
-		return $this->app->getAppPath() . 'route' . DIRECTORY_SEPARATOR;
-	}
-
-	/**
 	 * 解析多应用
 	 * @return bool
 	 */
@@ -192,11 +182,11 @@ class MultiApp
 
 		$this->app->setAppPath($appPath);
 		// 设置应用命名空间
-		$this->app->setNamespace($this->app->config->get('app.app_namespace') ?: 'app\\' . $appName);
+		$this->app->setNamespace('app\\' . $appName);
 
 		if (is_dir($appPath)) {
 			$this->app->setRuntimePath($this->app->getRuntimePath() . $appName . DIRECTORY_SEPARATOR);
-			$this->app->http->setRoutePath($this->getRoutePath());
+			$this->app->http->setRoutePath($appPath . 'route' . DIRECTORY_SEPARATOR);
 
 			//加载应用
 			$this->loadApp($appName, $appPath);

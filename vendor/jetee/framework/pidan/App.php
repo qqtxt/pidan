@@ -280,11 +280,10 @@ class App extends Container
 			$this->loadEvent(include $this->appPath . 'event.php');
 		}
 
-		if (is_file($this->appPath . 'service.php')) {
-			$services = include $this->appPath . 'service.php';
-			foreach ($services as $service) {
-				$this->register($service);
-			}
+		//注册应用服务与vendor服务
+		$services = array_merge(include $this->rootPath . 'vendor/services.php' ,include $this->appPath . 'service.php');
+		foreach ($services as $service) {
+			$this->register($service);
 		}
 
 		// 加载应用默认语言包
