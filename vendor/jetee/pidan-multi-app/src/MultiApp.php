@@ -125,12 +125,12 @@ class MultiApp
 					throw new RuntimeException('app not exists:' . $name);
 				} elseif ($name && isset($map['*'])) {
 					$appName = $map['*'];
-				//有name,map格式为['admin','blog',...]  没name,通过域名访问  
+				//有name有pathinfo,  没name,通过域名访问  
 				} else {
 					$appName = $name ?: $defaultApp;
 					$appPath = $this->path ?: $this->app->getBasePath() . $appName . DIRECTORY_SEPARATOR;
 
-					if (!is_dir($appPath)) {//默认的肯定存在，应用不存在  访问默认应用
+					if (!is_dir($appPath)) {//默认的肯定存在，简化时应用不存在  访问默认应用
 						$express = $this->app->config->get('app.app_express', false);
 						if ($express) {
 							$this->setApp($defaultApp);
