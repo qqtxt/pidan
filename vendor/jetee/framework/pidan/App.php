@@ -286,19 +286,12 @@ class App extends Container
 			$this->register($service);
 		}
 
-		// 加载应用默认语言包
+		// 加载系统语言包
 		$langSet = $this->lang->defaultLangSet();
-
 		$this->lang->load($this->pidanPath . 'pidan/lang/'  . $langSet . '.php');
 
-		// 加载系统语言包
-		$files = glob($this->appPath . 'lang' . DIRECTORY_SEPARATOR . $langSet . '.*');
-
-		if(!empty($files)) $this->lang->load($files);
-
-		/* 加载扩展（自定义）语言包*/
-		$list = $this->config->get('lang.extend_list', []);
-		if (isset($list[$langSet])) $this->lang->load($list[$langSet]);
+		//加载应用语言包
+		$this->loadLangPack($langSet);
 		
 
 		// 监听AppInit
@@ -310,7 +303,23 @@ class App extends Container
 
 		return $this;
 	}
+    /**
+     * 加载语言包
+     * @param string $langset 语言
+     * @return void
+     */
+    public function loadLangPack($langset)
+    {
+        // 加载系统语言包
+        $files = glob($this->appPath . 'lang' . DIRECTORY_SEPARATOR . $langset . '.*');
+        $this->lang->load($files);
 
+        // 加载扩展（自定义）语言包
+        $list = $this->config->get('lang.extend_list', []);
+        if (isset($list[$langset])) {
+            $this->lang->load($list[$langset]);
+        }
+    }
 
 	/**
 	 * 注册服务

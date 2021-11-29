@@ -102,13 +102,13 @@ class MultiApp
 			
 			//域名没绑定   再通过映射识别
 			if (!$this->app->http->isBind()) {
-				$path = $this->app->request->pathinfo();// index/blog/index
+				$path = $this->app->request->pathinfo();// index/blog/index.html
 				$map  = $this->app->config->get('app.app_map', []);//允许的app app_map=>['huotai'=>admin,*=>home,...]   或 ['admin','blog',...] 
 				$deny = $this->app->config->get('app.deny_app_list', []);
 				$name = current(explode('/', $path));//取根路径
 
 				if (strpos($name, '.')) {
-					$name = strstr($name, '.', true);
+					$name = strstr($name, '.', true);//index.html
 				}
 				
 				//映射中有 映射这格式[访问到的=>实际应用] [‘home’=>'index','huotai'=>'admin',]
@@ -120,17 +120,17 @@ class MultiApp
 					} else {
 						$appName = $map[$name];
 					}
-				// 从url中取到了name,map格式为['admin','blog',...]中不存在的与禁止的应用    报错，最好入口文件指定应用，其次通过域名指定
-				} elseif ($name && (false===array_search($name, $map) || in_array($name, $deny))) {//map与deny是这格式   ['index','admin','blog']
+				// 从url中取到了name,映射中有与禁止的应用    报错，最好入口文件指定应用，其次通过域名指定
+				} elseif ($name && (false!==array_search($name, $map) || in_array($name, $deny))) {//map与deny是这格式   ['index','admin','blog']
 					throw new RuntimeException('app not exists:' . $name);
 				} elseif ($name && isset($map['*'])) {
 					$appName = $map['*'];
-				//没取到name或map格式为['admin','blog',...]  通过域名访问就没有pathinfo
+				//有name,map格式为['admin','blog',...]  没name,通过域名访问  
 				} else {
 					$appName = $name ?: $defaultApp;
 					$appPath = $this->path ?: $this->app->getBasePath() . $appName . DIRECTORY_SEPARATOR;
 
-					if (!is_dir($appPath)) {
+					if (!is_dir($appPath)) {//默认的肯定存在，应用不存在  访问默认应用
 						$express = $this->app->config->get('app.app_express', false);
 						if ($express) {
 							$this->setApp($defaultApp);
@@ -140,7 +140,7 @@ class MultiApp
 						}
 					}
 				}
-				//大约118行  根据访问路径pathinfo取到  设置url的root,  pathinfo去除name只保留   控制器与方法      
+				//根据pathinfo取到$name  设置url的root,  pathinfo去除name只保留   控制器与方法      
 				if ($name) {
 					$this->app->request->setRoot('/' . $name);
 					$this->app->request->setPathinfo(strpos($path, '/') ? ltrim(strstr($path, '/'), '/') : '');
@@ -175,21 +175,16 @@ class MultiApp
 	 */
 	protected function setApp(string $appName): void
 	{
-		$this->appName = $appName;
-		$this->app->http->name($appName);
-
+        $space = $this->app->config->get('app.app_namespace') ?: 'app';
 		$appPath = $this->path ?: $this->app->getBasePath() . $appName . DIRECTORY_SEPARATOR;
-
+		// 动态设置多应用变量
 		$this->app->setAppPath($appPath);
-		// 设置应用命名空间
-		$this->app->setNamespace('app\\' . $appName);
-
+		$this->app->setNamespace($space.'\\' . $appName);
+		$this->app->http->name($appName);
 		if (is_dir($appPath)) {
 			$this->app->setRuntimePath($this->app->getRuntimePath() . $appName . DIRECTORY_SEPARATOR);
-			$this->app->http->setRoutePath($appPath . 'route' . DIRECTORY_SEPARATOR);
-
-			//加载应用
-			$this->loadApp($appName, $appPath);
+			$this->app->http->setRoutePath($appPath . 'route' . DIRECTORY_SEPARATOR);			
+			$this->loadApp($appName, $appPath);//加载应用
 		}
 	}
 
@@ -221,7 +216,7 @@ class MultiApp
 		}
 
 		// 加载应用默认语言包
-		//$this->app->loadLangPack($this->app->lang->defaultLangSet());
+		$this->app->loadLangPack($this->app->lang->defaultLangSet());
 	}
 
 }

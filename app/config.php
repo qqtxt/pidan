@@ -10,17 +10,18 @@ return [
 		'db_port'           =>'3306',
 	],
 	/*应用配置*/
-	'app'=>[
+	'app'=>[		
+		'app_namespace'    => '',// 应用命名空间
+		'app_express'      => true,
+		'with_route'	  =>false,//开启路由
 		'default_timezone'  => 'Asia/Shanghai',
 		'default_filter'    => 'trim',//I函数默认过滤
 		'default_app'		=> 'index',
 		'domain_bind'		=> [],//['huotai.xxx.com'=>'admin','admin'=>'admin'],//最好是入口文件名区分应用，  自动应用有效，安全
 		// 应用映射（自动多应用模式有效）
-		'app_map'          => ['index'=>'index','admin'=>'admin','*'=>'index'],
+		'app_map'          => [],// ['index'=>'index','admin'=>'admin','*'=>'index']   || ['index','blog','admin']
 		// 禁止URL访问的应用列表（自动多应用模式有效）
-		'deny_app_list'    => [],
-		//开启路由
-		'with_route'	  =>false,
+		'deny_app_list'    => [],		
 	],
 	/* Cookie设置 */
 	'cookie'=>[

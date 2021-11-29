@@ -6,7 +6,7 @@ define('DEBUG',true);//为了规范程序不建议用它    程序内都用app->
 
 define('ENTRY',microtime(true));
 
-define('APCU_PREFIX','pa_');//因为没有副本  注意别共用与覆盖    改名更新  不定义无缓冲
+define('APCU_PREFIX','pa11_');//因为没有副本  注意别共用与覆盖    改名更新  不定义无缓冲
 
 require __DIR__ . '/../vendor/autoload.php';
 
