@@ -6,6 +6,8 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit5b958a9890f313993bd760d5685bad3d
 {
+    public static $files = array (
+    );
     public static $prefixLengthsPsr4 = array (
         'p' => 
         array (
@@ -21,12 +23,12 @@ class ComposerStaticInit5b958a9890f313993bd760d5685bad3d
     public static $prefixDirsPsr4 = array (
         'pidan\\app\\' => 
         array (
-            0 => __DIR__ . '/..' . '/jetee/pidan-multi-app/src',
+            0 => __DIR__ . '/..' . '/zhh2100/pidan-multi-app/src',
         ),
         'pidan\\' => 
         array (
-            0 => __DIR__ . '/../jetee/framework/pidan', 
-            1 => __DIR__ . '/../jetee/pidan-helper',
+            0 => __DIR__ . '/../zhh2100/framework/src/pidan', 
+            1 => __DIR__ . '/../zhh2100/pidan-helper/src',
         ),
  
         'app\\' => 

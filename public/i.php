@@ -1,5 +1,21 @@
-<?php echo 1111111;
+<?php 
+function inner() {
+	yield 1; // key 0
+	yield 2; // key 1
+	yield 3; // key 2
+}
+function gen() {
+	yield 0; // key 0
+	yield from inner(); // keys 0-2
+	yield 4; // key 1
+}
+// 传递 false 作为第二个参数获得数组 [0, 1, 2, 3, 4]
+var_dump(iterator_to_array(inner()));
+
 /*
+
+echo 1111111;
+
 $a=[0=>1,1=>[1,2,3]];
 $b=[1=>[4=>4],4=>4,5=>5,6=>6];
 $c=$a+$b;

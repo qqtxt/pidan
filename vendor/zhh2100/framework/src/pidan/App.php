@@ -83,8 +83,8 @@ class App extends Container
 	public function __construct(string $rootPath = '')
 	{
 		$this->G('AppStart');
-		$this->pidanPath   = dirname(__DIR__)  . '/';// /jetee/framework
-		$this->rootPath    = $rootPath ? $rootPath : dirname(dirname(dirname($this->pidanPath))). '/';
+		$this->pidanPath   = dirname(__DIR__)  . '/';// /qqtxt/framework/src
+		$this->rootPath    = $rootPath ? $rootPath : dirname(dirname(dirname(dirname($this->pidanPath)))). '/';
 		$this->appPath     = $this->rootPath . 'app' . '/';
 		$this->runtimePath = $this->rootPath . 'runtime' . '/';
 		static::setInstance($this);

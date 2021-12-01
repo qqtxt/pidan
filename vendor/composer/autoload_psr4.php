@@ -6,7 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-	'pidan\\' => array($vendorDir . '/jetee/framework/pidan', $vendorDir . '/jetee/pidan-helper'),
-    'pidan\\app\\' => array($vendorDir . '/jetee/pidan-multi-app/src'),
+	'pidan\\' => array($vendorDir . '/zhh2100/framework/src/pidan', $vendorDir . '/zhh2100/pidan-helper/src'),
+    'pidan\\app\\' => array($vendorDir . '/zhh2100/pidan-multi-app/src'),
     'app\\' => array($baseDir . '/app'),
 );

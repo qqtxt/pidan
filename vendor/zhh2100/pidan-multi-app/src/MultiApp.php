@@ -160,12 +160,7 @@ class MultiApp
 	 */
 	protected function getScriptName(): string
 	{
-		if (isset($_SERVER['SCRIPT_FILENAME'])) {
-			$file = $_SERVER['SCRIPT_FILENAME'];
-		} elseif (isset($_SERVER['argv'][0])) {
-			$file = realpath($_SERVER['argv'][0]);
-		}
-
+        $file = $_SERVER['SCRIPT_FILENAME'] ?? ($_SERVER['argv'][0] ?? '');
 		return isset($file) ? pathinfo($file, PATHINFO_FILENAME) : '';
 	}
 
