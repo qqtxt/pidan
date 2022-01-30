@@ -8,7 +8,6 @@
             "app\\": "app"
         }
     },
-
     "authors": [
         {
             "name": "zhh2100",
@@ -16,5 +15,10 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {}
+    "require": {
+        "php": ">=7.1.0",
+        "qqtxt/pidan": "^1.0.1",
+        "qqtxt/pidan-multi-app": "^1.0"
+    },
+
 }

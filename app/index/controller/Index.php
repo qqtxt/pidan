@@ -12,9 +12,11 @@ class Index
 		phpinfo();
 		return ob_get_clean();
 	}
+
 	public function hello(){
 		return 'hello world!';
 	}
+
 	public function index(Request $request,App $app){
 // 		print_r($app->cookie->get());
 // 

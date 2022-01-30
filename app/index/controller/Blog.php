@@ -9,6 +9,7 @@ class Blog
        // event('UserLogin');
         return 'hello';
 
+
     }
 
     public function phpinfo($name = 'ThinkPHP6')

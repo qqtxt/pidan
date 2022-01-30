@@ -6,6 +6,9 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit5b958a9890f313993bd760d5685bad3d
 {
+
+    public static $files = array (
+    );
     public static $prefixLengthsPsr4 = array (
         'p' => 
         array (

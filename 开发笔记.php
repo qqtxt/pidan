@@ -60,3 +60,4 @@ CREATE TABLE IF NOT EXISTS `je_personal_info` (
 	PRIMARY KEY (`pid`),
 	KEY `id_card` (`id_card`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+=======
