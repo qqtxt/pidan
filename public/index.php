@@ -6,7 +6,7 @@ define('DEBUG',1);//方便改    传递给程序内app->isDebug
 
 define('ENTRY',microtime(true));
 
-define('APCU_PREFIX','pidan12_');//因为没有副本  注意别共用与覆盖    改名更新  不定义无缓冲
+define('APCU_PREFIX','pidan123_');//因为没有副本  注意别共用与覆盖    改名更新  不定义无缓冲
 
 
 require __DIR__ . '/../vendor/autoload.php';

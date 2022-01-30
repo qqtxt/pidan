@@ -307,6 +307,11 @@ class App extends Container
 
 		date_default_timezone_set($this->config->get('app.default_timezone'));
 
+        $services = include $this->rootPath . 'vendor/services.php';
+		foreach ($services as $service) {
+			$this->register($service);
+		}
+
 		$this->bootService();
 
 		return $this;
