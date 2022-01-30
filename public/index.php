@@ -2,20 +2,16 @@
 // [ 应用入口文件 ]
 namespace pidan;
 
-define('DEBUG',false);//为了规范程序不建议用它    程序内都用app->isDebug
+define('DEBUG',0);//方便改    传递给程序内app->isDebug
 
 define('ENTRY',microtime(true));
 
-define('APCU_PREFIX','pid111_');//因为没有副本  注意别共用与覆盖    改名更新  不定义无缓冲
+define('APCU_PREFIX','pidan1_');//因为没有副本  注意别共用与覆盖    改名更新  不定义无缓冲
 
 require __DIR__ . '/../vendor/autoload.php';
 
 // 执行HTTP应用并响应
-$http = (new App())->http;
-
-$response = $http->run();
-
-$response->send();
+($response =($http = (new App())->http)->run())->send();
 
 $http->end($response);
 

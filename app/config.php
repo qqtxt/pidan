@@ -11,7 +11,7 @@ return [
 	],
 	/*应用配置*/
 	'app'=>[
-		'default_timezone'  => 'Asia/Shanghai',
+		'default_timezone'  => 'Asia/Shanghai1',
 		'default_filter'    => 'trim',//I函数默认过滤
 		'default_app'		=> 'index',
 		'domain_bind'		=> [],//['huotai.xxx.com'=>'admin','admin'=>'admin'],//最好是入口文件名区分应用，  自动应用有效，安全
@@ -20,7 +20,7 @@ return [
 		// 禁止URL访问的应用列表（自动多应用模式有效）
 		'deny_app_list'    => [],
 		//开启路由
-		'with_route'	  =>false,
+		'with_route'	  =>0,
 	],
 	/* Cookie设置 */
 	'cookie'=>[

@@ -7,8 +7,7 @@ class Blog
     public function index(){
        // print_r(apcu_cache_info());
        // event('UserLogin');
-        echo '11113333333311';
-        return '4444444444';
+        return 'hello';
 
     }
 

@@ -1,10 +1,8 @@
 <?php
-use think\facade\Route;
-
-Route::get('think', function () {
+route()->get('think', function () {
     return 'hello,ThinkPHP6!';
 });
 
-Route::get('hello/:name', 'index/hello');
+route()->get('hello/:name', 'index/hello');
 
-Route::get('index/index', 'blog/index');
+route()->get('index/index', 'blog/index');

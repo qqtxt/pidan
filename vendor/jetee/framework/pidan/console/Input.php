@@ -33,7 +33,7 @@ class Input
     public function __construct($argv = null)
     {
         if (null === $argv) {
-            $argv = $_SERVER['argv'];
+            $argv = $_SERVER['ARGV'];
             // 去除命令名
             array_shift($argv);
         }

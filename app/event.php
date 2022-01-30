@@ -6,7 +6,7 @@ return [
     ],
 
     'listen'    => [
-        'AppInit'  => [function(){echo 'AppInit事件<br/>';}],
+        'AppInit'  => [],//[function(){echo 'AppInit事件<br/>';}],
         'HttpRun'  => [],
         'HttpEnd'  => [],
         'LogWrite' => [],

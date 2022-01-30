@@ -84,7 +84,7 @@ class Console
     {
         $this->app = $app;
 
-        $this->initialize();
+        $this->makeRequest();
 
         $this->definition = $this->getDefaultInputDefinition();
 
@@ -92,17 +92,6 @@ class Console
         $this->loadCommands();
 
         $this->start();
-    }
-
-    /**
-     * 初始化
-     */
-    protected function initialize()
-    {
-        if (!$this->app->initialized()) {
-            $this->app->initialize();
-        }
-        $this->makeRequest();
     }
 
     /**

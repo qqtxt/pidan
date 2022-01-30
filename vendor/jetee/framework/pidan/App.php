@@ -252,9 +252,13 @@ class App extends Container
 	public function initialize()
 	{
 		$this->initialized = true;
+
 		$this->appDebug = defined('DEBUG') && DEBUG ? true : false;
+
 		$this->config->load($this->appPath.'config.php');
+
 		ini_set('display_errors', $this->appDebug ? 'On' : 'Off');
+
 		if (!$this->runningInConsole()) {
 			//重新申请一块比较大的buffer
 			if (ob_get_level() > 0) {
@@ -265,13 +269,17 @@ class App extends Container
 				echo $output;
 			}
 		}
+
 		include_once $this->pidanPath . 'helper.php';
+
 		if (is_file($this->appPath . 'common.php')) {//加载应用函数
 			include_once $this->appPath. 'common.php';
 		}
+
 		if (is_file($this->appPath . 'event.php')) {
 			$this->loadEvent(include $this->appPath . 'event.php');
 		}
+
 		if (is_file($this->appPath . 'service.php')) {
 			$services = include $this->appPath . 'service.php';
 			foreach ($services as $service) {
@@ -281,10 +289,14 @@ class App extends Container
 
 		// 加载应用默认语言包
 		$langSet = $this->lang->defaultLangSet();
+
 		$this->lang->load($this->pidanPath . 'pidan/lang/'  . $langSet . '.php');
+
 		// 加载系统语言包
 		$files = glob($this->appPath . 'lang' . DIRECTORY_SEPARATOR . $langSet . '.*');
+
 		if(!empty($files)) $this->lang->load($files);
+
 		/* 加载扩展（自定义）语言包*/
 		$list = $this->config->get('lang.extend_list', []);
 		if (isset($list[$langSet])) $this->lang->load($list[$langSet]);
@@ -292,11 +304,14 @@ class App extends Container
 
 		// 监听AppInit
 		$this->event->trigger('AppInit');
+
 		date_default_timezone_set($this->config->get('app.default_timezone'));
 
 		$this->bootService();
+
 		return $this;
 	}
+
 
 	/**
 	 * 注册服务

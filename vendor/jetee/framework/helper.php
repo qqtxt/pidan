@@ -30,6 +30,11 @@ function app(string $name = '', array $args = [], bool $newInstance = false)
 	return $name ? pidan\App::getInstance()->make($name, $args, $newInstance) : pidan\Container::getInstance();
 }
 
+function route()
+{
+	return pidan\App::getInstance()->make('route');
+}
+
 /**
  * 绑定一个类到容器
  * @param string|array $abstract 类标识、接口（支持批量绑定）

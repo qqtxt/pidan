@@ -1,2 +1,2 @@
 <?php
-echo 'tpl<br>';
+echo 'tpl1<br>';
