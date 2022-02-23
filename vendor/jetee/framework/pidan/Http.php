@@ -38,6 +38,7 @@ class Http
 	public function __construct(App $app)
 	{
 		$this->app = $app;
+
 	}
 
 	/**
@@ -136,6 +137,8 @@ class Http
 	 */
 	public function run(): Response
 	{
+		$this->app->initialize();
+
 		$this->app->G('Http');
 		//自动创建request对象
 		$request = $this->app->make('request');

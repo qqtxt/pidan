@@ -1,3 +1,3 @@
 <?php
-echo 'tpl<br>';
+echo 'hello world!';
 

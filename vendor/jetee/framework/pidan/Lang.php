@@ -64,11 +64,24 @@ class Lang
 		$this->config = array_merge($this->config, array_change_key_case($config));
 		$this->range  = $this->config['default_lang'];
 		$this->setApcuPrefix('lang_');
+		$this->init();
 	}
 
 	public static function __make(Config $config)
 	{
 		return new static($config->get('lang'));
+	}
+
+	private function init(){
+		$app=app();
+		// 加载应用默认语言包
+		$langSet = $this->config['default_lang'];
+		$this->load($app->getPidanPath() . 'pidan/lang/'  . $langSet . '.php');
+		// 加载系统语言包
+		$files = glob($app->getAppPath() . 'lang' . DIRECTORY_SEPARATOR . $langSet . '.*');
+		if(!empty($files)) $this->load($files);
+		/* 加载扩展（自定义）语言包*/
+		if (isset($this->config['extend_list'][$langSet])) $this->load($this->config['extend_list'][$langSet]);
 	}
 
 	/**

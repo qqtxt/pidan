@@ -90,8 +90,6 @@ class App extends Container
 		static::setInstance($this);
 		$this->instance('pidan\App', $this);
 		$this->instance('pidan\Container', $this);      
-		$this->initialize();
-		$this->G('initialized');
 	}
 	
 	/**
@@ -287,21 +285,6 @@ class App extends Container
 			}
 		}
 
-		// 加载应用默认语言包
-		$langSet = $this->lang->defaultLangSet();
-
-		$this->lang->load($this->pidanPath . 'pidan/lang/'  . $langSet . '.php');
-
-		// 加载系统语言包
-		$files = glob($this->appPath . 'lang' . DIRECTORY_SEPARATOR . $langSet . '.*');
-
-		if(!empty($files)) $this->lang->load($files);
-
-		/* 加载扩展（自定义）语言包*/
-		$list = $this->config->get('lang.extend_list', []);
-		if (isset($list[$langSet])) $this->lang->load($list[$langSet]);
-		
-
 		// 监听AppInit
 		$this->event->trigger('AppInit');
 
@@ -313,7 +296,7 @@ class App extends Container
 		}
 
 		$this->bootService();
-
+		$this->G('initialized');
 		return $this;
 	}
 

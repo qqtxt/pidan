@@ -83,6 +83,8 @@ class Console
     public function __construct(App $app)
     {
         $this->app = $app;
+        
+        $this->app->initialize();
 
         $this->makeRequest();
 
