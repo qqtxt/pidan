@@ -6,7 +6,7 @@ define('DEBUG',0);//方便改    传递给程序内app->isDebug
 
 define('ENTRY',microtime(true));
 
-define('APCU_PREFIX','pidan123_');//因为是共享内在,注意其它站的共用与覆盖,改名更新,不定义无apcu缓冲  如composer缓冲类名
+define('APCU_PREFIX','pinhuocc123_');//因为是共享内在,注意其它站的共用与覆盖,改名更新,不定义无apcu缓冲  如composer缓冲类名
 
 
 require __DIR__ . '/../vendor/autoload.php';
