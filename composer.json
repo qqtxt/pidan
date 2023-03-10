@@ -1,7 +1,6 @@
 {
     "name": "zhh2100/pidan",
     "description": "zhh2100下的皮蛋php框架",
-    "type": "library",
     "license": "Mit",
     "autoload": {
         "psr-4": {
@@ -18,6 +17,6 @@
     "require": {
         "php": ">=7.1.0",
         "zhh2100/framework": "^1.0.1"
-    },
+    }
 
 }
