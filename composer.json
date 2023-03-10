@@ -1,6 +1,6 @@
 {
-    "name": "jetee/pidan",
-    "description": "jetee下的皮蛋php框架",
+    "name": "zhh2100/pidan",
+    "description": "zhh2100下的皮蛋php框架",
     "type": "library",
     "license": "Mit",
     "autoload": {
@@ -17,8 +17,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.1.0",
-        "qqtxt/pidan": "^1.0.1",
-        "qqtxt/pidan-multi-app": "^1.0"
+        "zhh2100/framework": "^1.0.1"
     },
 
 }
