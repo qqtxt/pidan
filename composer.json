@@ -16,10 +16,10 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.1.0",
-        "zhh2100/framework": "^1.0.1",
-        "zhh2100/pidan-orm":"^1.0.1",
-        "zhh2100/pidan-helper":"^1.0.1",
-        "zhh2100/pidan-multi-app":"^1.0.1"
+        "zhh2100/framework": "^v1.0.1",
+        "zhh2100/pidan-orm":"^v1.0.1",
+        "zhh2100/pidan-helper":"^v1.0.1",
+        "zhh2100/pidan-multi-app":"^v1.0.1"
     }
 
 }
