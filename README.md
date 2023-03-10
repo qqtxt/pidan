@@ -1,6 +1,7 @@
 #安装说明
-框架用git clone git@github.com:zhh2100/pidan.git
-然后 composer install
+框架用git clone git@github.com:zhh2100/pidan.git  
+
+然后 composer install  
 
 #库设计,以库内为准 这里为辅
 ##MYSQL结构	
