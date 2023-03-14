@@ -2,7 +2,7 @@
 // [ 应用入口文件 ]
 namespace pidan;
 
-define('DEBUG',0);//方便改    传递给程序内app->isDebug
+define('DEBUG',1);//方便改    传递给程序内app->isDebug
 
 define('ENTRY',microtime(true));
 
